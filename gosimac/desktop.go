@@ -12,6 +12,7 @@ package gosimac
 import (
 	"database/sql"
 	"fmt"
+	"github.com/golang/glog"
 	_ "github.com/mattn/go-sqlite3"
 	"os/user"
 )
@@ -26,17 +27,17 @@ func ChangeDesktopBackground(path string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(db)
-	fmt.Println(db.Ping())
+	glog.V(2).Infof("Database was opened successfully")
 	defer db.Close()
 
 	sqlSmt := fmt.Sprintf("update data set value = '%s';", path)
-	fmt.Println(sqlSmt)
+	glog.V(2).Infof("SQL Query: %s", sqlSmt)
 
 	_, err = db.Exec(sqlSmt)
 	if err != nil {
 		return err
 	}
+	glog.V(2).Infof("%s was executed successfully", sqlSmt)
 
 	return nil
 }
