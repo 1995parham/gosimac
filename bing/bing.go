@@ -35,7 +35,7 @@ func GetBingDesktop(path string, change bool) error {
 	}
 	var bing_resp BingResponse
 	json.Unmarshal(body, &bing_resp)
-	fmt.Println(bing_resp)
+
 	for _, image := range bing_resp.Images {
 		resp, err = http.Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
 		if err != nil {
