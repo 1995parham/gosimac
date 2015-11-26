@@ -21,6 +21,8 @@ func main() {
 	var num int
 	flag.IntVar(&num, "n", 1, "number of wallpapers that you want from Bing :)")
 
+	flag.Parse()
+
 	usr, err := user.Current()
 	if err != nil {
 		glog.Errorf("OS.User: %v", err)
