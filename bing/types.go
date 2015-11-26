@@ -14,22 +14,28 @@ type BingResponse struct {
 	Tooltip Tooltip `json:"tooltip"`
 }
 
-type Image struct {
-	StartDate     string `json:"startdate"`
-	FullStartDate string `json:"fullstartdate"`
-	EndDate       string `json:"enddate"`
-	URL           string `json:"url"`
-	URLBase       string `json:"urlbase"`
-	Copyright     string `json:"copyright"`
-	CopyrightLink string `json:"copyrightlink"`
-	Wallpaper     bool `json:"wp"`
-	Hash          string `json:"hsh"`
-	Drk           int `json:"drk"`
-	Top           int `json:"top"`
-	Bot           int `json:"bot"`
-	HS            []HS `json:"hs"`
-	Msg           []string `json:"msg"`
+type BingRequest struct {
+	Format string `url:"format"`
+	Index  int    `url:"idx"`
+	Number int    `url:"n"`
+	Mkt    string `url:"mkt"`
+}
 
+type Image struct {
+	StartDate     string   `json:"startdate"`
+	FullStartDate string   `json:"fullstartdate"`
+	EndDate       string   `json:"enddate"`
+	URL           string   `json:"url"`
+	URLBase       string   `json:"urlbase"`
+	Copyright     string   `json:"copyright"`
+	CopyrightLink string   `json:"copyrightlink"`
+	Wallpaper     bool     `json:"wp"`
+	Hash          string   `json:"hsh"`
+	Drk           int      `json:"drk"`
+	Top           int      `json:"top"`
+	Bot           int      `json:"bot"`
+	HS            []HS     `json:"hs"`
+	Msg           []string `json:"msg"`
 }
 
 type HS struct {

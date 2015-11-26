@@ -13,16 +13,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/1995parham/gosimac/gosimac"
+	"github.com/franela/goreq"
 	"github.com/golang/glog"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"os/exec"
 )
 
-func GetBingDesktop(path string, change bool) error {
-	resp, err := http.Get("http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US")
+func GetBingDesktop(path string, change bool, idx int, n int) error {
+	// Create HTTP GET request
+	resp, err := goreq.Request{
+		Uri: "http://www.bing.com/HPImageArchive.aspx",
+		QueryString: BingRequest{
+			Format: "js",
+			Index:  idx,
+			Number: n,
+			Mkt:    "en-US",
+		},
+	}.Do()
 	if err != nil {
 		glog.Errorf("Net.HTTP: %v\n", err)
 		return err
@@ -38,7 +47,9 @@ func GetBingDesktop(path string, change bool) error {
 	json.Unmarshal(body, &bing_resp)
 
 	for _, image := range bing_resp.Images {
-		resp, err = http.Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
+		resp, err = goreq.Request{
+			Uri: fmt.Sprintf("http://www.bing.com/%s", image.URL),
+		}.Do()
 		if err != nil {
 			glog.Errorf("Net.HTTP: %v\n", err)
 			return err
