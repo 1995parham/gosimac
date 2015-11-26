@@ -18,6 +18,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/exec"
 )
 
 func GetBingDesktop(path string, change bool) error {
@@ -61,6 +62,8 @@ func GetBingDesktop(path string, change bool) error {
 				glog.Errorf("GoSiMac: %v", err)
 				return err
 			}
+			exec.Command("killall", "Dock")
+
 		}
 	}
 	return nil

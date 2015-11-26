@@ -20,11 +20,13 @@ import (
 func ChangeDesktopBackground(path string) error {
 	usr, err := user.Current()
 	if err != nil {
+		glog.Errorf("OS.User: %v\n", err)
 		return err
 	}
 
 	db, err := sql.Open("sqlite3", fmt.Sprintf("%s/Library/Application Support/Dock/desktoppicture.db", usr.HomeDir))
 	if err != nil {
+		glog.Errorf("Database.SQL: %v\n", err)
 		return err
 	}
 	glog.V(2).Infof("Database was opened successfully")
@@ -35,6 +37,7 @@ func ChangeDesktopBackground(path string) error {
 
 	_, err = db.Exec(sqlSmt)
 	if err != nil {
+		glog.Errorf("Database.SQL: %v\n", err)
 		return err
 	}
 	glog.V(2).Infof("%s was executed successfully", sqlSmt)
