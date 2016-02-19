@@ -85,7 +85,7 @@ func GetBingDesktop(path string, idx int, n int) error {
 		go getBingImage(path, image, end)
 	}
 	// Waiting for getting all the images
-	for len(end) < n {
+	for len(end) < len(bing_resp.Images) {
 	}
 
 	return nil
