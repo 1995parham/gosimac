@@ -22,6 +22,9 @@ func main() {
 	var num int
 	flag.IntVar(&num, "n", 1, "Number of wallpapers that you want from Bing :)")
 
+	var idx int
+	flag.IntVar(&idx, "i", 0, "Base index of wallpapers that you want from Bing :)")
+
 	flag.Parse()
 
 	usr, err := user.Current()
@@ -36,5 +39,5 @@ func main() {
 		os.Mkdir(path, 0755)
 	}
 
-	bing.GetBingDesktop(path, 0, num)
+	bing.GetBingDesktop(path, idx, num)
 }
