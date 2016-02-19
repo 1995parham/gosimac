@@ -21,6 +21,13 @@ import (
 
 func getBingImage(path string, image Image, end chan<- error) {
 	fmt.Printf("Getting %s\n", image.StartDate)
+
+	if _, err := os.Stat(fmt.Sprintf("%s/%s.jpg", path, image.FullStartDate)); err == nil {
+		fmt.Printf("%s is already exists\n", image.StartDate)
+		end <- nil
+		return
+	}
+
 	resp, err := goreq.Request{
 		Uri: fmt.Sprintf("http://www.bing.com/%s", image.URL),
 	}.Do()
