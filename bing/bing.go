@@ -75,19 +75,12 @@ func GetBingDesktop(path string, change bool, idx int, n int) error {
 	json.Unmarshal(body, &bing_resp)
 
 	var end chan error = make(chan error, n)
+	// Create spreate thread for each image
 	for _, image := range bing_resp.Images {
 		go getBingImage(path, image, end)
 	}
+	// Waiting for getting all the images
 	for len(end) < n {
-	}
-	if change {
-		image := bing_resp.Images[0]
-		err := gosimac.ChangeDesktopBackground(fmt.Sprintf("%s/%s.jpg", path, image.FullStartDate))
-		if err != nil {
-			glog.Errorf("GoSiMac: %v", err)
-			return err
-		}
-		exec.Command("killall", "Dock")
 	}
 
 	return nil
