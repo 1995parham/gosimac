@@ -12,13 +12,11 @@ package bing
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/1995parham/gosimac/gosimac"
 	"github.com/franela/goreq"
 	"github.com/golang/glog"
 	"io"
 	"io/ioutil"
 	"os"
-	"os/exec"
 )
 
 func getBingImage(path string, image Image, end chan<- error) {
@@ -49,7 +47,7 @@ func getBingImage(path string, image Image, end chan<- error) {
 	end <- nil
 }
 
-func GetBingDesktop(path string, change bool, idx int, n int) error {
+func GetBingDesktop(path string, idx int, n int) error {
 	// Create HTTP GET request
 	resp, err := goreq.Request{
 		Uri: "http://www.bing.com/HPImageArchive.aspx",
