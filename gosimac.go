@@ -19,7 +19,7 @@ import (
 
 func main() {
 	var num int
-	flag.IntVar(&num, "n", 1, "number of wallpapers that you want from Bing :)")
+	flag.IntVar(&num, "n", 1, "Number of wallpapers that you want from Bing :)")
 
 	flag.Parse()
 
@@ -28,5 +28,12 @@ func main() {
 		glog.Errorf("OS.User: %v", err)
 	}
 
-	bing.GetBingDesktop(fmt.Sprintf("%s/Pictures/Bing", usr.HomeDir), false, num-1, num)
+	var path string
+	path = fmt.Sprintf("%s/Pictures/Bing", usr.HomeDir)
+
+	if _, err := os.Stat(path); err != nil {
+		os.Mkdir(path, 0755)
+	}
+
+	bing.GetBingDesktop(path, false, 0, num)
 }
