@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"github.com/1995parham/gosimac/bing"
 	"github.com/golang/glog"
+	"os"
 	"os/user"
 )
 
@@ -35,5 +36,5 @@ func main() {
 		os.Mkdir(path, 0755)
 	}
 
-	bing.GetBingDesktop(path, false, 0, num)
+	bing.GetBingDesktop(path, 0, num)
 }
