@@ -17,6 +17,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"time"
 )
 
 func getBingImage(path string, image Image, end chan<- error) {
@@ -55,6 +56,7 @@ func getBingImage(path string, image Image, end chan<- error) {
 }
 
 func GetBingDesktop(path string, idx int, n int) error {
+	goreq.SetConnectTimeout(1 * time.Minute)
 	// Create HTTP GET request
 	resp, err := goreq.Request{
 		Uri: "http://www.bing.com/HPImageArchive.aspx",
@@ -64,6 +66,7 @@ func GetBingDesktop(path string, idx int, n int) error {
 			Number: n,
 			Mkt:    "en-US",
 		},
+		UserAgent: "GoSiMac",
 	}.Do()
 	if err != nil {
 		glog.Errorf("Net.HTTP: %v\n", err)
