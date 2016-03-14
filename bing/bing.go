@@ -17,15 +17,16 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"sync"
 	"time"
 )
 
-func getBingImage(path string, image Image, end chan<- error) {
+func getBingImage(path string, image Image, w sync.WaitGroup) {
 	fmt.Printf("Getting %s\n", image.StartDate)
 
 	if _, err := os.Stat(fmt.Sprintf("%s/%s.jpg", path, image.FullStartDate)); err == nil {
 		fmt.Printf("%s is already exists\n", image.StartDate)
-		end <- nil
+		w.Done()
 		return
 	}
 
@@ -34,7 +35,7 @@ func getBingImage(path string, image Image, end chan<- error) {
 	}.Do()
 	if err != nil {
 		glog.Errorf("Net.HTTP: %v\n", err)
-		end <- err
+		w.Done()
 		return
 	}
 
@@ -43,7 +44,7 @@ func getBingImage(path string, image Image, end chan<- error) {
 	dest_file, err := os.Create(fmt.Sprintf("%s/%s.jpg", path, image.FullStartDate))
 	if err != nil {
 		glog.Errorf("OS: %v\n", err)
-		end <- err
+		w.Done()
 		return
 	}
 
@@ -52,7 +53,8 @@ func getBingImage(path string, image Image, end chan<- error) {
 	io.Copy(dest_file, resp.Body)
 
 	fmt.Printf("%s was gotten\n", image.StartDate)
-	end <- nil
+
+	w.Done()
 }
 
 func GetBingDesktop(path string, idx int, n int) error {
@@ -82,14 +84,15 @@ func GetBingDesktop(path string, idx int, n int) error {
 	var bing_resp BingResponse
 	json.Unmarshal(body, &bing_resp)
 
-	var end chan error = make(chan error, n)
+	var w sync.WaitGroup
 	// Create spreate thread for each image
 	for _, image := range bing_resp.Images {
-		go getBingImage(path, image, end)
+		w.Add(1)
+		go getBingImage(path, image, w)
 	}
+
 	// Waiting for getting all the images
-	for len(end) < len(bing_resp.Images) {
-	}
+	w.Wait()
 
 	return nil
 }
