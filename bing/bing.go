@@ -1,24 +1,17 @@
-/*
- * +===============================================
- * | Author:        Parham Alvani (parham.alvani@gmail.com)
- * |
- * | Creation Date: 24-11-2015
- * |
- * | File Name:     bing.go
- * +===============================================
- */
+// Package bing provides a simple way to access bing API.
 package bing
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/franela/goreq"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/franela/goreq"
+	"github.com/golang/glog"
 )
 
 var w sync.WaitGroup
@@ -37,31 +30,32 @@ func getBingImage(path string, image Image) {
 		Uri: fmt.Sprintf("http://www.bing.com/%s", image.URL),
 	}.Do()
 	if err != nil {
-		glog.Errorf("Net.HTTP: %v\n", err)
+		glog.Errorf("net/http: %v", err)
 		return
 	}
 
 	defer resp.Body.Close()
 
-	dest_file, err := os.Create(fmt.Sprintf("%s/%s.jpg", path, image.FullStartDate))
+	destFile, err := os.Create(fmt.Sprintf("%s/%s.jpg", path, image.FullStartDate))
 	if err != nil {
 		glog.Errorf("OS: %v\n", err)
 		return
 	}
 
-	defer dest_file.Close()
+	defer destFile.Close()
 
-	io.Copy(dest_file, resp.Body)
+	io.Copy(destFile, resp.Body)
 
 	fmt.Printf("%s was gotten\n", image.StartDate)
 }
 
+// GetBingDesktop function gets `n` since `idx` from bing and store them in `path`.
 func GetBingDesktop(path string, idx int, n int) error {
 	goreq.SetConnectTimeout(1 * time.Minute)
 	// Create HTTP GET request
 	resp, err := goreq.Request{
 		Uri: "http://www.bing.com/HPImageArchive.aspx",
-		QueryString: BingRequest{
+		QueryString: Request{
 			Format: "js",
 			Index:  idx,
 			Number: n,
@@ -70,7 +64,7 @@ func GetBingDesktop(path string, idx int, n int) error {
 		UserAgent: "GoSiMac",
 	}.Do()
 	if err != nil {
-		glog.Errorf("Net.HTTP: %v\n", err)
+		glog.Errorf("net/http: %v\n", err)
 		return err
 	}
 
@@ -78,13 +72,13 @@ func GetBingDesktop(path string, idx int, n int) error {
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Errorf("IO.IOUtil: %v\n", err)
+		fmt.Errorf("io/ioutil: %v", err)
 	}
-	var bing_resp BingResponse
-	json.Unmarshal(body, &bing_resp)
+	var bingResp Response
+	json.Unmarshal(body, &bingResp)
 
 	// Create spreate thread for each image
-	for _, image := range bing_resp.Images {
+	for _, image := range bingResp.Images {
 		w.Add(1)
 		go getBingImage(path, image)
 	}

@@ -1,26 +1,20 @@
-/*
- * +===============================================
- * | Author:        Parham Alvani (parham.alvani@gmail.com)
- * |
- * | Creation Date: 25-11-2015
- * |
- * | File Name:     types.go
- * +===============================================
- */
 package bing
 
-type BingResponse struct {
+// Response structure stores bing api respone from json.
+type Response struct {
 	Images  []Image `json:"images"`
 	Tooltip Tooltip `json:"tooltip"`
 }
 
-type BingRequest struct {
+// Request structure stores bing api request to json.
+type Request struct {
 	Format string `url:"format"`
 	Index  int    `url:"idx"`
 	Number int    `url:"n"`
 	Mkt    string `url:"mkt"`
 }
 
+// Image structure stores bing image information.
 type Image struct {
 	StartDate     string   `json:"startdate"`
 	FullStartDate string   `json:"fullstartdate"`
@@ -38,11 +32,13 @@ type Image struct {
 	Msg           []string `json:"msg"`
 }
 
+// HS structure ...
 type HS struct {
 	Description string `json:"desc"`
 	Link        string `json:"link"`
 }
 
+// Tooltip structure ...
 type Tooltip struct {
 	Loading        string `json:"loading"`
 	Previous       string `json:"previous"`
