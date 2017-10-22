@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"sync"
 	"time"
@@ -70,12 +69,11 @@ func GetBingDesktop(path string, idx int, n int) error {
 
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Errorf("io/ioutil: %v", err)
-	}
 	var bingResp Response
-	json.Unmarshal(body, &bingResp)
+	if err := json.NewDecoder(resp.Body).Decode(&bingResp); err != nil {
+		glog.Errorf("encoding/json: %v\n", err)
+		return err
+	}
 
 	// Create spreate thread for each image
 	for _, image := range bingResp.Images {
