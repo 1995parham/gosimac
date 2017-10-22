@@ -7,15 +7,17 @@
  * | File Name:     gosimac.go
  * +===============================================
  */
+
 package main
 
 import (
 	"flag"
-	"fmt"
-	"github.com/1995parham/gosimac/bing"
-	"github.com/golang/glog"
 	"os"
 	"os/user"
+	"path"
+
+	"github.com/1995parham/gosimac/bing"
+	"github.com/golang/glog"
 )
 
 func main() {
@@ -32,12 +34,12 @@ func main() {
 		glog.Errorf("OS.User: %v", err)
 	}
 
-	var path string
-	path = fmt.Sprintf("%s/Pictures/Bing", usr.HomeDir)
+	var p string
+	p = path.Join(usr.HomeDir, "Pictures", "Bing")
 
-	if _, err := os.Stat(path); err != nil {
-		os.Mkdir(path, 0755)
+	if _, err := os.Stat(p); err != nil {
+		os.Mkdir(p, 0755)
 	}
 
-	bing.GetBingDesktop(path, idx, num)
+	bing.GetBingDesktop(p, idx, num)
 }
