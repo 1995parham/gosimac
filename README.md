@@ -1,4 +1,5 @@
 # Go Si Mac
+[![Travis](https://img.shields.io/travis/1995parham/gosimac.svg?style=flat-square)](https://travis-ci.org/1995parham/gosimac)
 
 ## Introduction
 
