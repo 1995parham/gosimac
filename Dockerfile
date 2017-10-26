@@ -7,4 +7,5 @@ RUN cd /src && go build -o gosimac
 FROM alpine
 WORKDIR /app
 COPY --from=build-env /src/gosimac /app/
+VOLUME ["$HOME/Pictures/Bing"]
 ENTRYPOINT ./gosimac
