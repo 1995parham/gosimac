@@ -1,11 +1,12 @@
 # Build stage
 FROM golang:alpine AS build-env
-ADD . /src
-RUN cd /src && go build -o gosimac
+ADD . $GOPATH/src/github/1995parham/gosimac/
+RUN apk update && apk add git
+RUN cd $GOPATH/src/github/1995parham/gosimac/ && go get && go build -o /gosimac
 
 # Final stage
 FROM alpine
 WORKDIR /app
-COPY --from=build-env /src/gosimac /app/
-VOLUME ["$HOME/Pictures/Bing"]
-ENTRYPOINT ./gosimac
+COPY --from=build-env /gosimac /app/
+VOLUME ["/root/Pictures/Bing/"]
+ENTRYPOINT ["./gosimac"]
