@@ -53,7 +53,7 @@ func GetBingDesktop(path string, idx int, n int) error {
 	goreq.SetConnectTimeout(1 * time.Minute)
 	// Create HTTP GET request
 	resp, err := goreq.Request{
-		Uri: "http://www.bing.com/HPImageArchive.aspx",
+		Uri: "http://www.bing.com/hpimagearchive.aspx",
 		QueryString: Request{
 			Format: "js",
 			Index:  idx,
@@ -63,16 +63,14 @@ func GetBingDesktop(path string, idx int, n int) error {
 		UserAgent: "GoSiMac",
 	}.Do()
 	if err != nil {
-		glog.Errorf("net/http: %v\n", err)
-		return err
+		return fmt.Errorf("network failure on %s: %v", "http://www.bing.com/hpimagearchive.aspx", err)
 	}
 
 	defer resp.Body.Close()
 
 	var bingResp Response
 	if err := json.NewDecoder(resp.Body).Decode(&bingResp); err != nil {
-		glog.Errorf("encoding/json: %v\n", err)
-		return err
+		return fmt.Errorf("decoding json: %v", err)
 	}
 
 	// Create spreate thread for each image
