@@ -6,6 +6,12 @@
 Automatically downloads bing daily wallpapers for having beautiful wallpapers on your desktop.
 Personally I wrote this for having fun and helping one of my friends :P.
 
+## Installation
+
+```
+docker run --rm -v $(pwd)/.:/root/Pictures/Bing 1995parham/gosimac
+```
+
 ## Read More
 
 ### How to change your OS X wallpaper from terminal :smile:
