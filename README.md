@@ -1,5 +1,6 @@
 # Go Si Mac
 [![Travis](https://img.shields.io/travis/1995parham/gosimac.svg?style=flat-square)](https://travis-ci.org/1995parham/gosimac)
+[![Docker Pulls](https://img.shields.io/docker/pulls/1995parham/gosimac.svg?style=flat-square)](https://hub.docker.com/r/1995parham/gosimac/)
 [![GoDoc](https://godoc.org/github.com/1995parham/gosimac?status.svg)](http://godoc.org/github.com/1995parham/gosimac)
 
 ## Introduction
