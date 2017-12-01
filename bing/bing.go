@@ -48,7 +48,7 @@ func getBingImage(path string, image Image) {
 	fmt.Printf("%s was gotten\n", image.StartDate)
 }
 
-// GetBingDesktop function gets `n` since `idx` from bing and store them in `path`.
+// GetBingDesktop function gets `n` Bing Wallpaper since `idx` and stores them in `path`.
 func GetBingDesktop(path string, idx int, n int) error {
 	goreq.SetConnectTimeout(1 * time.Minute)
 	// Create HTTP GET request
