@@ -17,15 +17,19 @@ import (
 	"path"
 
 	"github.com/1995parham/gosimac/bing"
+	"github.com/1995parham/gosimac/wikimedia"
 	"github.com/golang/glog"
 )
 
 func main() {
 	var num int
-	flag.IntVar(&num, "n", 1, "Number of wallpapers that you want from Bing :)")
+	flag.IntVar(&num, "n", 1, "Number of wallpapers that you want")
 
 	var idx int
-	flag.IntVar(&idx, "i", 0, "Base index of wallpapers that you want from Bing :)")
+	flag.IntVar(&idx, "i", 0, "Base index of wallpapers that you want")
+
+	var t string
+	flag.StringVar(&t, "type", "bing", "Wallpaper service: bing wikimedia")
 
 	flag.Parse()
 
@@ -41,5 +45,10 @@ func main() {
 		os.Mkdir(p, 0755)
 	}
 
-	bing.GetBingDesktop(p, idx, num)
+	switch t {
+	case "bing":
+		bing.GetBingDesktop(p, idx, num)
+	case "wikimedia":
+		wikimedia.GetWikimediaPOTD(p)
+	}
 }
