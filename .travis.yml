@@ -1,5 +1,41 @@
 language: go
-
 go:
-  - 1.x
   - master
+  - 1.9
+
+env:
+    - secure: vulSU3qyNrJ3ZRTy6xj9QQM/Hjr7CfA9hhZUBnHK68s3BQ9Re91D6neefmwxo98rCYlRYexobyvlBprHB8R7f9YJd3UiSIXTQXbaczwg0VujFjNFTsgTFFtHJs9LF+fqBN5bvGii97vo7lzM17j76a6Fm/ldB7raYo6oAeSfO04klkar9I9/J40CoPRi6uXThS9c+8NFFucrhaIWzT2m/ngl3fqnbGmxjoUGDF51hc/X1hKJ0UHOS0M1zDbBlPp7INucDq7C+ckiJHijOOUWwXwIVs/EEaBucg2cvDBtWfRQvasWpm9lZV20aKHoHcxTGw0yxlJtUE8Z3oA6s2hcqOaUHxVM2BbEGDg57tM2rJ5IuOU75YXABdH5gC9Aze9HCjv406EECg5KRun/6CjWpdgpKDAhsF/wR/1R/uAOAQ1af40+Yu0VZaxOSkHMmv+OhvvSVnrZ4npRbk+lfBgMMzg2pmGVv4y5/xbR9zWrq0r8jle3wB600I7czxI3DIbu6m0hIHgtFWlw/6Fb3FrauvlXL6qtk/iZFCD7kdGSMsTpkbgaW6v8EuxM1ytRLrRrKjmDLsHEScWHREj5PcCbGYbisEvtSCaNiVCQrfEa8Ek19jedQH8uUPmkn0QSicXgbMiYZ9ILMTk7Xx0o/rSDtutJ8IgTCDICJXlKENBA3Vw=
+
+before_install:
+  # Setup some env variables
+  - GO_FILES=$(find . -iname '*.go' )  # All the .go files
+  - PKGS=$(go list ./... )             # All the import paths
+
+  # Setup dependency management tool
+  - go get -u github.com/golang/dep/cmd/dep
+
+  # Install linters
+  - go get -u github.com/golang/lint/golint              # Linter
+  - go get -u github.com/kisielk/errcheck                # errcheck checks that you checked errors.
+
+install:
+  - dep ensure
+
+script:
+  - go vet -v $PKGS                   # go vet is the official Go static analyzer
+  - errcheck -verbose $PKGS           # Check for unchecked errors
+  - golint -set_exit_status $PKGS     # One last linter
+
+  # Run all the tests
+  - go test -v $PKGS
+
+# calls goreleaser
+before_deploy:
+  - git checkout Gopkg.lock
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: curl -sL https://git.io/goreleaser | bash
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux
