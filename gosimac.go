@@ -35,20 +35,26 @@ func main() {
 
 	usr, err := user.Current()
 	if err != nil {
-		log.Errorf("OS.User: %v", err)
+		log.Errorf("user.Current: %v", err)
 	}
 
 	var p string
 	p = path.Join(usr.HomeDir, "Pictures", "Bing")
 
 	if _, err := os.Stat(p); err != nil {
-		os.Mkdir(p, 0755)
+		if err := os.Mkdir(p, 0755); err != nil {
+			log.Errorf("os.Mkdir: %v", err)
+		}
 	}
 
 	switch t {
 	case "bing":
-		bing.GetBingDesktop(p, idx, num)
+		if err := bing.GetBingDesktop(p, idx, num); err != nil {
+			log.Errorf("bing.GetBingDesktop: %v", err)
+		}
 	case "wikimedia":
-		wikimedia.GetWikimediaPOTD(p)
+		if err := wikimedia.GetWikimediaPOTD(p); err != nil {
+			log.Errorf("wikimedia.GetWikimediaPOTD: %v", err)
+		}
 	}
 }

@@ -26,21 +26,31 @@ func getBingImage(path string, image Image) {
 
 	resp, err := http.Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
 	if err != nil {
-		log.Errorf("net/http: %v", err)
+		log.Errorf("http.Get: %v", err)
 		return
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.Errorf("(io.Closer).Close: %v", err)
+		}
+	}()
 
 	destFile, err := os.Create(fmt.Sprintf("%s/%s.jpg", path, image.FullStartDate))
 	if err != nil {
-		log.Errorf("OS: %v\n", err)
+		log.Errorf("os.Create: %v", err)
 		return
 	}
 
-	defer destFile.Close()
+	defer func() {
+		if err := destFile.Close(); err != nil {
+			log.Errorf("(*os.File).Close: %v", err)
+		}
+	}()
 
-	io.Copy(destFile, resp.Body)
+	if _, err := io.Copy(destFile, resp.Body); err != nil {
+		log.Errorf("io.Copy: %v", err)
+	}
 
 	log.Infof("%s was gotten\n", image.StartDate)
 }
@@ -55,7 +65,11 @@ func GetBingDesktop(path string, idx int, n int) error {
 		return fmt.Errorf("network failure on %s: %v", "http://www.bing.com/hpimagearchive.aspx", err)
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.Errorf("(io.Closer).Close: %v", err)
+		}
+	}()
 
 	var bingResp Response
 	if err := json.NewDecoder(resp.Body).Decode(&bingResp); err != nil {
