@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // GetWikimediaPOTD function gets Picture of The Day from wikimedia and stores it in `parh`.
@@ -26,7 +28,11 @@ func GetWikimediaPOTD(path string) error {
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.Errorf("(io.Closer).Close: %v", err)
+		}
+	}()
 
 	var wikimediaResp map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&wikimediaResp); err != nil {
