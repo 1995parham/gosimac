@@ -18,7 +18,7 @@ import (
 
 	"github.com/1995parham/gosimac/bing"
 	"github.com/1995parham/gosimac/wikimedia"
-	"github.com/golang/glog"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 
 	usr, err := user.Current()
 	if err != nil {
-		glog.Errorf("OS.User: %v", err)
+		log.Errorf("OS.User: %v", err)
 	}
 
 	var p string
