@@ -13,26 +13,15 @@ package wikimedia
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/franela/goreq"
+	"net/http"
 )
 
 // GetWikimediaPOTD function gets Picture of The Day from wikimedia and stores it in `parh`.
 func GetWikimediaPOTD(path string) error {
 	// Create HTTP GET request
-	resp, err := goreq.Request{
-		Uri: "https://commons.wikimedia.org/w/api.php",
-		QueryString: Request{
-			Action:        "query",
-			Generator:     "images",
-			Titles:        "Template:Potd/2014-12-02",
-			Prop:          "imageinfo",
-			Iiprop:        "url",
-			Format:        "json",
-			FormatVersion: 2,
-		},
-		UserAgent: "GoSiMac",
-	}.Do()
+	resp, err := http.Get(
+		fmt.Sprintf("https://commons.wikimedia.org/w/api.php?action=query&Generator=images&titles=Template:Potd/2014-12-02&prop=imageinfo&iiprop=url&format=json&formatVersion=2"),
+	)
 	if err != nil {
 		return err
 	}
