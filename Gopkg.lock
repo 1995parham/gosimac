@@ -3,18 +3,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/franela/goreq"
-  packages = ["."]
-  revision = "bcd34c9993f899273c74baaa95e15386cd97b6e7"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/golang/glog"
-  packages = ["."]
-  revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
-
-[[projects]]
-  branch = "master"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   revision = "778f2e774c725116edbc3d039dc0dfc1cc62aae8"
@@ -34,6 +22,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "afa1523e4dbae78f805f566454cf34669da213a1363248be0637110f375f5a43"
+  inputs-digest = "66baf7c788949ad6f47ec8d25ca3446c93dc9cda6bb0517f9fb3f9473b143e6f"
   solver-name = "gps-cdcl"
   solver-version = 1
