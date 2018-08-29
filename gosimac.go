@@ -17,6 +17,7 @@ import (
 	"path"
 
 	"github.com/1995parham/gosimac/bing"
+	"github.com/1995parham/gosimac/core"
 	"github.com/1995parham/gosimac/wikimedia"
 	log "github.com/sirupsen/logrus"
 )
@@ -39,22 +40,32 @@ func main() {
 	}
 
 	var p string
-	p = path.Join(usr.HomeDir, "Pictures", "Bing")
+	p = path.Join(usr.HomeDir, "Pictures", "GoSiMac")
 
 	if _, err := os.Stat(p); err != nil {
 		if err := os.Mkdir(p, 0755); err != nil {
-			log.Errorf("os.Mkdir: %v", err)
+			log.Fatalf("os.Mkdir: %v", err)
 		}
 	}
 
+	var s core.Source
+
 	switch t {
 	case "bing":
-		if err := bing.GetBingDesktop(p, idx, num); err != nil {
-			log.Errorf("bing.GetBingDesktop: %v", err)
+		s = &bing.Source{
+			Idx: idx,
+			N:   num,
 		}
 	case "wikimedia":
 		if err := wikimedia.GetWikimediaPOTD(p); err != nil {
 			log.Errorf("wikimedia.GetWikimediaPOTD: %v", err)
 		}
 	}
+
+	a := core.NewApp(p, s)
+	if err := a.Run(); err != nil {
+		log.Fatal(err)
+	}
+
+	a.Wait()
 }
