@@ -1,25 +1,20 @@
 language: go
 go:
-  - master
-  - 1.9
+  - "1.11"
 
 env:
   - secure: OgbslJsC6Gxh5gQ7LXHoJFp06y/6nQ/GYcgAUVEr9wQbLAM5WXWgY19M36tX6Zcoy5MAS5PeIqDmTKkP0TbMhNsPSRntCdNLg6RJ51kS3Ge+kMXFgNlmj0pKkVPjvpJsB5H/xl9Ms2wX4p7nZY9eAsXoO0MyVl48OsGgPm2UzZqBwQtkkUWoKtpkHUvmqfTmQBh8+IhyvVkPgblAOe5vLwCXTlQ2qbRq/hhpSOS8+13iAzucHoaJcXcU/VTvMdYPZfZWWEW+B4XBmldDyaBbddgMdtTCLzsUxS/a4nB39cNUJW+IWW/KuveMdPw+IDKDVyQjhcj8KbWGojvl52B3MJe4fx8lXCbqNMGhVxNs0kZnu6lV20wlsOlKqLcty41DLNxgzOq0LHJ+AuhYUyZgHGmYYR5SI/4Ksc6FyV5tvrvuaT/8oCOhQiIeAZ9BCxQBy2yIA2TFN33qjzdCuen2vT9kJSYB/E+Bw85ihFJgYp/mHu7qRQZBJPBhSyWVTDVO5/SDEhkUEF+Z6r6/YfoFnUdqrAQh8M2nwfN/6rhvR2z11YaPhv9X81z+KV4fCDfJfbfMHG874W7sk/nQWq0zmBHiblbVmi5OfTqDWE2S5ITYlCnsDqBemaLhcArPdsY9n8xLsMLrrqCuyrdnDKEbzItIOYteYKFohgCPSol0rlg=
 
 before_install:
   # Setup some env variables
-  - GO_FILES=$(find . -iname '*.go' )  # All the .go files
   - PKGS=$(go list ./... )             # All the import paths
-
-  # Setup dependency management tool
-  - go get -u github.com/golang/dep/cmd/dep
 
   # Install linters
   - go get -u github.com/golang/lint/golint              # Linter
   - go get -u github.com/kisielk/errcheck                # errcheck checks that you checked errors.
 
 install:
-  - dep ensure
+  - go install
 
 script:
   - go vet -v $PKGS                   # go vet is the official Go static analyzer
