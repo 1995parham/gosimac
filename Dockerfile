@@ -8,5 +8,5 @@ RUN cd $GOPATH/src/github/1995parham/gosimac/ && go get && go build -o /gosimac
 FROM alpine
 WORKDIR /app
 COPY --from=build-env /gosimac /app/
-VOLUME ["/root/Pictures/Bing/"]
+VOLUME ["/root/Pictures/Gosimac/"]
 ENTRYPOINT ["./gosimac"]
