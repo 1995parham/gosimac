@@ -1,6 +1,6 @@
 package bing
 
-// Response structure stores bing api respone from json.
+// Response structure stores bing api response from json.
 type Response struct {
 	Images  []Image `json:"images"`
 	Tooltip Tooltip `json:"tooltip"`
