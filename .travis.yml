@@ -13,6 +13,7 @@ before_install:
   - go get -u github.com/golang/lint/golint              # Linter
   - go get -u github.com/kisielk/errcheck                # errcheck checks that you checked errors.
 
+install: true
 script:
   - go vet -v $PKGS                   # go vet is the official Go static analyzer
   - errcheck -verbose $PKGS           # Check for unchecked errors
