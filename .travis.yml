@@ -27,4 +27,3 @@ deploy:
     on:
       tags: true
       go: master
-      condition: $TRAVIS_OS_NAME = linux
