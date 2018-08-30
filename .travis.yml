@@ -10,7 +10,8 @@ before_install:
   - go get -u github.com/kisielk/errcheck                # errcheck checks that you checked errors.
   - PKGS=$(go list ./... ) # All the import paths
 
-install: true
+install:
+  - go mod tidy
 script:
   - go vet -v $PKGS                   # go vet is the official Go static analyzer
   - errcheck -verbose $PKGS           # Check for unchecked errors
