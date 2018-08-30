@@ -2,41 +2,38 @@
 package bing
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
+	resty "gopkg.in/resty.v1"
 )
 
 // Source is source implmentation for bing everyday image
 type Source struct {
 	response Response
-	Idx      int
 	N        int
 }
 
 // Init initiates source and return number of avaiable images
 func (s *Source) Init() (int, error) {
-	// Create HTTP GET request
-	resp, err := http.Get(
-		fmt.Sprintf("http://www.bing.com/HPImageArchive.aspx?format=js&idx=%d&n=%d&mkt=en-US",
-			s.Idx, s.N))
+	resp, err := resty.New().
+		SetHostURL("https://www.bing.com").
+		R().
+		SetResult(&s.response).
+		SetQueryParam("format", "js").
+		SetQueryParam("mkt", "en-US").
+		SetQueryParam("idx", "0").
+		SetQueryParam("n", strconv.Itoa(s.N)).
+		Get("/HPImageArchive.aspx")
 	if err != nil {
-		return 0, fmt.Errorf("network failure on %s: %v", "http://www.bing.com/hpimagearchive.aspx", err)
+		return 0, err
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return 0, fmt.Errorf("Invalid response: %s", resp.Status)
-	}
-
-	if err := json.NewDecoder(resp.Body).Decode(&s.response); err != nil {
-		return 0, fmt.Errorf("decoding json: %v", err)
-	}
-
-	if err := resp.Body.Close(); err != nil {
-		return 0, fmt.Errorf("(io.Closer).Close: %v", err)
+	if resp.StatusCode() != http.StatusOK {
+		return 0, fmt.Errorf("Invalid response: %s", resp.Status())
 	}
 
 	return len(s.response.Images), nil
