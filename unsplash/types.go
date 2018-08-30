@@ -10,5 +10,9 @@ type Image struct {
 		Small   string `json:"small"`
 		Thumb   string `json:"thumb"`
 	} `json:"urls"`
+	Location struct {
+		City    string
+		Country string
+	}
 	Description string
 }
