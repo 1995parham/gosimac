@@ -1,12 +1,13 @@
 package unsplash
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
+	resty "gopkg.in/resty.v1"
 )
 
 // Source is source implmentation for unsplash image service
@@ -17,20 +18,18 @@ type Source struct {
 
 // Init initiates source and return number of avaiable images
 func (s *Source) Init() (int, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/photos/random?count=%d", "https://api.unsplash.com/", s.N), nil)
-	if err != nil {
-		return 0, err
-	}
-	req.Header.Add("Accept-Version", "v1")
-	req.Header.Add("Authorization", fmt.Sprintf("Client-ID %s", "4c483af1b27cf8d55fc29504bc48e3755e47eb7a3dd3a320e92b23fc4e5aa1b8"))
+	resp, err := resty.New().
+		SetHeader("Accept-Version", "v1").
+		SetHeader("Authorization", fmt.Sprintf("Client-ID %s", "4c483af1b27cf8d55fc29504bc48e3755e47eb7a3dd3a320e92b23fc4e5aa1b8")).
+		SetHostURL("https://api.unsplash.com").
+		R().
+		SetResult(&s.response).
+		SetQueryParam("count", strconv.Itoa(s.N)).
+		SetQueryParam("orientation", "landscape").
+		Get("/photos/random")
 
-	resp, err := (&http.Client{}).Do(req)
-	if err != nil {
-		return 0, err
-	}
-
-	if err := json.NewDecoder(resp.Body).Decode(&s.response); err != nil {
-		return 0, fmt.Errorf("decoding json: %v", err)
+	if resp.StatusCode() != http.StatusOK {
+		return 0, fmt.Errorf("Invalid response: %s", resp.Status())
 	}
 
 	return len(s.response), err
