@@ -15,9 +15,7 @@ script:
   - go vet -v $PKGS                   # go vet is the official Go static analyzer
   - errcheck -verbose $PKGS           # Check for unchecked errors
   - golint -set_exit_status $PKGS     # One last linter
-
-  # Run all the tests
-  - go test -v ./...
+  - go test -v $PKS                   # Run all the tests
 
 # calls goreleaser
 deploy:
