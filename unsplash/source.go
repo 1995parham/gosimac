@@ -27,12 +27,15 @@ func (s *Source) Init() (int, error) {
 		SetQueryParam("count", strconv.Itoa(s.N)).
 		SetQueryParam("orientation", "landscape").
 		Get("/photos/random")
+	if err != nil {
+		return 0, err
+	}
 
 	if resp.StatusCode() != http.StatusOK {
 		return 0, fmt.Errorf("Invalid response: %s", resp.Status())
 	}
 
-	return len(s.response), err
+	return len(s.response), nil
 }
 
 // Name returns source name
@@ -44,7 +47,7 @@ func (s *Source) Name() string {
 func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 	image := s.response[index]
 
-	logrus.Infof("Getting %s\n", image.ID)
+	logrus.Infof("Getting %s (%s)", image.ID, image.Description)
 
 	resp, err := http.Get(image.URLs.Full)
 	if err != nil {
