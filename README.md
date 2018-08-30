@@ -6,10 +6,14 @@
 
 ## Introduction
 
-Automatically downloads bing daily wallpapers for having beautiful wallpapers on your desktop.
-Personally I wrote this for having fun and helping one of my friends :P.
+GoSiMac downloads Bing daily wallpapers and random images from Unsplash, etc.
+for you to have beautiful wallpaper on your desktop whenever you want.
 
-## Installation
+Personally, I wrote this to have fun and help one of my friends who is not among us right now. :disappointed:
+
+This module is highly customizable and new sources can easily add just by implementing source interface.
+
+## Docker
 
 ```
 docker run --rm -v $(pwd)/.:/root/Pictures/Bing 1995parham/gosimac
