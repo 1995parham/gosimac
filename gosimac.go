@@ -26,9 +26,6 @@ func main() {
 	var num int
 	flag.IntVar(&num, "n", 1, "Number of wallpapers that you want")
 
-	var idx int
-	flag.IntVar(&idx, "i", 0, "Base index of wallpapers that you want")
-
 	var t string
 	flag.StringVar(&t, "type", "bing", "Wallpaper service: bing unsplash")
 
@@ -53,8 +50,7 @@ func main() {
 	switch t {
 	case "bing":
 		s = &bing.Source{
-			Idx: idx,
-			N:   num,
+			N: num,
 		}
 	case "unsplash":
 		s = &unsplash.Source{
