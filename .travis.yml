@@ -8,12 +8,13 @@ env:
 before_install:
   - go get -u github.com/golang/lint/golint              # Linter
   - go get -u github.com/kisielk/errcheck                # errcheck checks that you checked errors.
+  - PKGS=$(go list ./... ) # All the import paths
 
 install: true
 script:
-  - go vet -v ./...                   # go vet is the official Go static analyzer
-  - errcheck -verbose ./...           # Check for unchecked errors
-  - golint -set_exit_status ./...     # One last linter
+  - go vet -v $PKGS                   # go vet is the official Go static analyzer
+  - errcheck -verbose $PKGS           # Check for unchecked errors
+  - golint -set_exit_status $PKGS     # One last linter
 
   # Run all the tests
   - go test -v ./...
