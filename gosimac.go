@@ -18,7 +18,7 @@ import (
 
 	"github.com/1995parham/gosimac/bing"
 	"github.com/1995parham/gosimac/core"
-	"github.com/1995parham/gosimac/wikimedia"
+	"github.com/1995parham/gosimac/unsplash"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -30,7 +30,7 @@ func main() {
 	flag.IntVar(&idx, "i", 0, "Base index of wallpapers that you want")
 
 	var t string
-	flag.StringVar(&t, "type", "bing", "Wallpaper service: bing wikimedia")
+	flag.StringVar(&t, "type", "bing", "Wallpaper service: bing unsplash")
 
 	flag.Parse()
 
@@ -56,9 +56,9 @@ func main() {
 			Idx: idx,
 			N:   num,
 		}
-	case "wikimedia":
-		if err := wikimedia.GetWikimediaPOTD(p); err != nil {
-			log.Errorf("wikimedia.GetWikimediaPOTD: %v", err)
+	case "unsplash":
+		s = &unsplash.Source{
+			N: num,
 		}
 	}
 
