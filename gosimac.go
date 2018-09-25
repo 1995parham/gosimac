@@ -56,6 +56,8 @@ func main() {
 		s = &unsplash.Source{
 			N: num,
 		}
+	default:
+		log.Fatalf("Invalid type is used, type %s is unknown", t)
 	}
 
 	a := core.NewApp(p, s)
