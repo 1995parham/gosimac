@@ -4,6 +4,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fa84da9d770f4487bb1d6d6d74154267)](https://www.codacy.com/app/1995parham/gosimac?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1995parham/gosimac&amp;utm_campaign=Badge_Grade)
 [![Go Report](https://goreportcard.com/badge/github.com/1995parham/gosimac?style=flat-square)](https://goreportcard.com/report/github.com/1995parham/gosimac)
 [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/1995parham/gosimac)
+[![GoReleaser](https://img.shields.io/badge/powered%20by-goreleaser-green.svg?style=flat-square)](https://github.com/goreleaser)
 
 ## Introduction
 
