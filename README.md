@@ -32,9 +32,5 @@ path:
 
 ### How to create wallpaper sideshow in ubuntu :smile:
 
-First put configuration of GoSiMac into gnome desktop configuration folder
-with following command:
-```sh
-dst=$HOME/.local/share/gnome-background-properties
-test -d "$dst" || mkdir -p "$dst" && cp gnome/gosimac-config.xml "$dst"
-```
+For just the **basic** automatic wallpaper changing feature, you don’t need to install any software.
+Just launch the pre-installed *Shotwell* photo manager, choose the pictures you need (you may need to import them first), then go to `Files -> Set as Desktop Slideshow`.
