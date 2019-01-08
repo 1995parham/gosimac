@@ -19,7 +19,7 @@ install:
   - go mod download
 script:
   - go vet -v $PKGS                   # go vet is the official Go static analyzer
-  - # TODO errcheck -verbose $PKGS           # Check for unchecked errors
+  - errcheck -verbose $PKGS           # Check for unchecked errors
   - golint -set_exit_status $PKGS     # One last linter
   - go test -v $PKGS                  # Run all the tests
 
