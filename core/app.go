@@ -25,17 +25,19 @@ import (
 )
 
 // App is a GoSiMac application. It contains all gosimac
-// functionality. it fetchs background from given source and store them in files.
+// functionality. it fetchs background from given source and store them in the given path.
 type App struct {
 	source Source
 	path   string
 
+	// these streams connect fetch and store stage
 	fetchStream chan int
 	storeStream chan image
 
 	wait sync.WaitGroup
 }
 
+// image contains name and bytes of the fetched image
 type image struct {
 	name string
 	data io.ReadCloser
@@ -54,10 +56,12 @@ func NewApp(path string, source Source) *App {
 
 // Run application that fetches images and store them
 func (a *App) Run() error {
+	// finds number of the images
 	n, err := a.source.Init()
 	if err != nil {
 		return err
 	}
+	logrus.Infof("%d Images are available from %s", n, a.source.Name())
 	a.wait.Add(n)
 
 	go func() {
@@ -79,6 +83,7 @@ func (a *App) Wait() {
 	a.wait.Wait()
 }
 
+// fetch runs the fetch stage
 func (a *App) fetch() {
 	logrus.Infof("Fetch from %s", a.source.Name())
 	for index := range a.fetchStream {
@@ -91,6 +96,7 @@ func (a *App) fetch() {
 	}
 }
 
+// store runs the store stage
 func (a *App) store() {
 	logrus.Infof("Store from %s", a.source.Name())
 	for image := range a.storeStream {
