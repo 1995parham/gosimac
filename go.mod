@@ -10,6 +10,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.0.6
 	github.com/stretchr/testify v1.2.2 // indirect
+	github.com/urfave/cli v1.20.0
 	golang.org/x/crypto v0.0.0-20180502184808-8b1d31080a76 // indirect
 	golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f // indirect
 	golang.org/x/sys v0.0.0-20180501092740-78d5f264b493 // indirect
