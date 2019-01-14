@@ -98,8 +98,9 @@ func main() {
 		},
 	}
 
-	app.Run(os.Args)
-
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 }
 
 // run runs given source on given path and waits for its results
