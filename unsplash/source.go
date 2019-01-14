@@ -14,6 +14,7 @@ import (
 type Source struct {
 	response []Image
 	N        int
+	Query    string
 }
 
 // Init initiates source and return number of avaiable images
@@ -26,6 +27,7 @@ func (s *Source) Init() (int, error) {
 		SetResult(&s.response).
 		SetQueryParam("count", strconv.Itoa(s.N)).
 		SetQueryParam("orientation", "landscape").
+		SetQueryParam("query", s.Query).
 		Get("/photos/random")
 	if err != nil {
 		return 0, err
