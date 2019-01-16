@@ -15,6 +15,7 @@ import (
 type Source struct {
 	response Response
 	N        int
+	Index    int
 }
 
 // Init initiates source and return number of avaiable images
@@ -25,7 +26,7 @@ func (s *Source) Init() (int, error) {
 		SetResult(&s.response).
 		SetQueryParam("format", "js").
 		SetQueryParam("mkt", "en-US").
-		SetQueryParam("idx", "0").
+		SetQueryParam("idx", strconv.Itoa(s.Index)).
 		SetQueryParam("n", strconv.Itoa(s.N)).
 		Get("/HPImageArchive.aspx")
 	if err != nil {
