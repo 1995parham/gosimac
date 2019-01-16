@@ -69,11 +69,17 @@ func main() {
 					Usage: "Limit selection to photos matching a search term.",
 					Value: "",
 				},
+				cli.StringFlag{
+					Name:  "o",
+					Usage: "Filter search results by photo orientation, Valid values are landscape, portrait, and squarish.",
+					Value: "landscape",
+				},
 			},
 			Action: func(c *cli.Context) error {
 				s := &unsplash.Source{
-					N:     c.Int("n"),
-					Query: c.String("q"),
+					N:           c.Int("n"),
+					Query:       c.String("q"),
+					Orientation: c.String("o"),
 				}
 				return run(p, s, c)
 			},
