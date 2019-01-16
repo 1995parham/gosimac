@@ -118,8 +118,9 @@ func (a *App) store() {
 			continue
 		}
 
-		if _, err := io.Copy(file, image.data); err != nil {
-			logrus.Errorf("io.Copy: %v", err)
+		bytes, err := io.Copy(file, image.data)
+		if err != nil {
+			logrus.Errorf("io.Copy (%d bytes): %v", bytes, err)
 		}
 
 		if err := file.Close(); err != nil {
