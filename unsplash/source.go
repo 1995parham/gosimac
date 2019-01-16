@@ -12,9 +12,10 @@ import (
 
 // Source is source implmentation for unsplash image service
 type Source struct {
-	response []Image
-	N        int
-	Query    string
+	response    []Image
+	N           int
+	Query       string
+	Orientation string
 }
 
 // Init initiates source and return number of avaiable images
@@ -26,7 +27,7 @@ func (s *Source) Init() (int, error) {
 		R().
 		SetResult(&s.response).
 		SetQueryParam("count", strconv.Itoa(s.N)).
-		SetQueryParam("orientation", "landscape").
+		SetQueryParam("orientation", s.Orientation).
 		SetQueryParam("query", s.Query).
 		Get("/photos/random")
 	if err != nil {
