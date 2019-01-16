@@ -94,10 +94,16 @@ func main() {
 					Usage: "The number of photos to return",
 					Value: 10,
 				},
+				cli.IntFlag{
+					Name:  "i",
+					Usage: "Index of the first image to fetch",
+					Value: 0,
+				},
 			},
 			Action: func(c *cli.Context) error {
 				s := &bing.Source{
-					N: c.Int("n"),
+					N:     c.Int("n"),
+					Index: c.Int("i"),
 				}
 				return run(p, s, c)
 			},
