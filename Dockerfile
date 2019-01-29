@@ -7,6 +7,7 @@ RUN go get && go build -o /gosimac
 
 # Final stage
 FROM alpine
+RUN apk update && apk --no-cache add ca-certificates
 WORKDIR /app
 COPY --from=build-env /gosimac /app/
 VOLUME ["/root/Pictures/Gosimac/"]
