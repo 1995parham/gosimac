@@ -18,7 +18,7 @@ This module is highly customizable and new sources can easily add just by implem
 ## Docker
 
 ```
-docker run --rm -v $(pwd)/.:/root/Pictures/Bing 1995parham/gosimac
+docker run --rm -v $(pwd)/.:/root/Pictures/GoSiMac 1995parham/gosimac ...
 ```
 
 ## Read More
