@@ -49,14 +49,14 @@ func (s *Source) Name() string {
 func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 	image := s.response.Images[index]
 
-	logrus.Infof("Getting %s\n", image.StartDate)
+	logrus.Infof("Getting %s", image.StartDate)
 
 	resp, err := http.Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
 	if err != nil {
 		return "", nil, err
 	}
 
-	logrus.Infof("%s was gotten\n", image.StartDate)
+	logrus.Infof("%s was gotten", image.StartDate)
 
 	return fmt.Sprintf("%s.jpg", image.FullStartDate), resp.Body, nil
 }

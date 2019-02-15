@@ -106,7 +106,7 @@ func (a *App) store() {
 		)
 
 		if _, err := os.Stat(path); err == nil {
-			logrus.Infof("%s is already exists\n", path)
+			logrus.Infof("%s is already exists", path)
 			a.wait.Done()
 			continue
 		}

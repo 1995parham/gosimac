@@ -57,7 +57,7 @@ func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 		return "", nil, err
 	}
 
-	logrus.Infof("%s was gotten\n", image.ID)
+	logrus.Infof("%s was gotten", image.ID)
 
 	return fmt.Sprintf("%s.jpg", image.ID), resp.Body, nil
 }
