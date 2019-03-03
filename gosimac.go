@@ -29,8 +29,7 @@ func main() {
 		log.Errorf("user.Current: %v", err)
 	}
 
-	var p string
-	p = path.Join(usr.HomeDir, "Pictures", "GoSiMac")
+	p := path.Join(usr.HomeDir, "Pictures", "GoSiMac")
 
 	if _, err := os.Stat(p); err != nil {
 		if err := os.Mkdir(p, 0755); err != nil {

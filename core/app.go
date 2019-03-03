@@ -101,7 +101,7 @@ func (a *App) store() {
 	logrus.Infof("Store from %s", a.source.Name())
 	for image := range a.storeStream {
 		path := path.Join(
-			fmt.Sprintf("%s", a.path),
+			a.path,
 			fmt.Sprintf("%s-%s", a.source.Name(), image.name),
 		)
 
