@@ -121,7 +121,7 @@ func main() {
 }
 
 // run runs given source on given path and waits for its results
-func run(p string, s core.Source, c *cli.Context) error {
+func run(p string, s core.Source, _ *cli.Context) error {
 	fmt.Println(">>> Source")
 	fmt.Printf("%+v\n", s)
 	fmt.Println(">>>")
