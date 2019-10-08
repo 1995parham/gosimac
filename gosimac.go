@@ -23,7 +23,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func main() {
+func picturesDir() string {
 	usr, err := user.Current()
 	if err != nil {
 		log.Errorf("user.Current: %v", err)
@@ -36,6 +36,12 @@ func main() {
 			log.Fatalf("os.Mkdir: %v", err)
 		}
 	}
+
+	return p
+}
+
+func main() {
+	p := picturesDir()
 
 	app := cli.NewApp()
 	app.Name = "GoSiMac"
@@ -131,5 +137,4 @@ func run(p string, s core.Source, c *cli.Context) error {
 
 	a.Wait()
 	return nil
-
 }

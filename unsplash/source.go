@@ -10,6 +10,8 @@ import (
 	resty "gopkg.in/resty.v1"
 )
 
+const token = "4c483af1b27cf8d55fc29504bc48e3755e47eb7a3dd3a320e92b23fc4e5aa1b8"
+
 // Source is source implmentation for unsplash image service
 type Source struct {
 	response    []Image
@@ -18,11 +20,11 @@ type Source struct {
 	Orientation string
 }
 
-// Init initiates source and return number of avaiable images
+// Init initiates source and return number of available images
 func (s *Source) Init() (int, error) {
 	resp, err := resty.New().
 		SetHeader("Accept-Version", "v1").
-		SetHeader("Authorization", fmt.Sprintf("Client-ID %s", "4c483af1b27cf8d55fc29504bc48e3755e47eb7a3dd3a320e92b23fc4e5aa1b8")).
+		SetHeader("Authorization", fmt.Sprintf("Client-ID %s", token)).
 		SetHostURL("https://api.unsplash.com").
 		R().
 		SetResult(&s.response).
@@ -35,7 +37,7 @@ func (s *Source) Init() (int, error) {
 	}
 
 	if resp.StatusCode() != http.StatusOK {
-		return 0, fmt.Errorf("Invalid response: %s", resp.Status())
+		return 0, fmt.Errorf("invalid response: %s", resp.Status())
 	}
 
 	return len(s.response), nil

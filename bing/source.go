@@ -18,7 +18,7 @@ type Source struct {
 	Index    int
 }
 
-// Init initiates source and return number of avaiable images
+// Init initiates source and return number of available images
 func (s *Source) Init() (int, error) {
 	resp, err := resty.New().
 		SetHostURL("https://www.bing.com").
@@ -34,7 +34,7 @@ func (s *Source) Init() (int, error) {
 	}
 
 	if resp.StatusCode() != http.StatusOK {
-		return 0, fmt.Errorf("Invalid response: %s", resp.Status())
+		return 0, fmt.Errorf("invalid response: %s", resp.Status())
 	}
 
 	return len(s.response.Images), nil
