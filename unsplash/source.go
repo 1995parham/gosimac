@@ -6,10 +6,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
-	resty "gopkg.in/resty.v1"
 )
 
+// nolint: gosec
 const token = "4c483af1b27cf8d55fc29504bc48e3755e47eb7a3dd3a320e92b23fc4e5aa1b8"
 
 // Source is source implmentation for unsplash image service
