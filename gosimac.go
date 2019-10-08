@@ -40,6 +40,7 @@ func picturesDir() string {
 	return p
 }
 
+// nolint: funlen
 func main() {
 	p := picturesDir()
 
