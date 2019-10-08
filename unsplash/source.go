@@ -54,6 +54,7 @@ func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 
 	logrus.Infof("Getting %s (%s)", image.ID, image.Description)
 
+	// nolint: bodyclose
 	resp, err := http.Get(image.URLs.Full)
 	if err != nil {
 		return "", nil, err

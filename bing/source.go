@@ -51,6 +51,7 @@ func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 
 	logrus.Infof("Getting %s", image.StartDate)
 
+	// nolint: bodyclose
 	resp, err := http.Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
 	if err != nil {
 		return "", nil, err
