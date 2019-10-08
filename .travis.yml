@@ -17,7 +17,7 @@ install:
   - go mod tidy
   - go mod download
 script:
-  - golangci-lint --enable-all
+  - golangci-lint run --enable-all
   - go test -v ./...
 
 # calls goreleaser
