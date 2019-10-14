@@ -72,7 +72,6 @@ func (a *App) Run() error {
 	}()
 
 	for i := 0; i < runtime.NumCPU(); i++ {
-
 		go a.fetch()
 
 		go a.store()
