@@ -61,6 +61,7 @@ func (a *App) Run() error {
 	if err != nil {
 		return err
 	}
+
 	logrus.Infof("%d Images are available from %s", n, a.source.Name())
 	a.wait.Add(n)
 
@@ -71,7 +72,9 @@ func (a *App) Run() error {
 	}()
 
 	for i := 0; i < runtime.NumCPU(); i++ {
+
 		go a.fetch()
+
 		go a.store()
 	}
 
@@ -86,6 +89,7 @@ func (a *App) Wait() {
 // fetch runs the fetch stage
 func (a *App) fetch() {
 	logrus.Infof("Fetch from %s", a.source.Name())
+
 	for index := range a.fetchStream {
 		name, data, err := a.source.Fetch(index)
 		if err != nil {
@@ -99,6 +103,7 @@ func (a *App) fetch() {
 // store runs the store stage
 func (a *App) store() {
 	logrus.Infof("Store from %s", a.source.Name())
+
 	for image := range a.storeStream {
 		path := path.Join(
 			a.path,
@@ -108,6 +113,7 @@ func (a *App) store() {
 		if _, err := os.Stat(path); err == nil {
 			logrus.Infof("%s is already exists", path)
 			a.wait.Done()
+
 			continue
 		}
 
@@ -115,6 +121,7 @@ func (a *App) store() {
 		if err != nil {
 			logrus.Errorf("os.Create: %v", err)
 			a.wait.Done()
+
 			continue
 		}
 
@@ -130,6 +137,7 @@ func (a *App) store() {
 		if err := image.data.Close(); err != nil {
 			logrus.Errorf("(*io.ReadCloser).Close: %v", err)
 		}
+
 		a.wait.Done()
 	}
 }

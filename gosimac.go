@@ -137,5 +137,6 @@ func run(p string, s core.Source, _ *cli.Context) error {
 	}
 
 	a.Wait()
+
 	return nil
 }
