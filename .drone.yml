@@ -1,0 +1,22 @@
+---
+kind: pipeline
+name: default
+
+steps:
+  - name: lint
+    image: golangci/golangci-lint
+    commands:
+      - golangci-lint run --enable-all
+  - name: test
+    image: golang
+    commands:
+      - go test -v ./...
+  - name: release
+    image: golang
+    environment:
+      GITHUB_TOKEN:
+        from_secret: github_token
+    commands:
+      - curl -sL https://git.io/goreleaser | bash
+    when:
+      event: tag
