@@ -1,8 +1,6 @@
 # Go Si Mac
-[![Travis](https://img.shields.io/travis/com/1995parham/gosimac.svg?style=flat-square)](https://travis-ci.com/1995parham/gosimac)
+[![Drone (cloud)](https://img.shields.io/drone/build/1995parham/gosimac.svg?style=flat-square)](https://cloud.drone.io/1995parham/gosimac)
 [![Docker Pulls](https://img.shields.io/docker/pulls/1995parham/gosimac.svg?style=flat-square)](https://hub.docker.com/r/1995parham/gosimac/)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fa84da9d770f4487bb1d6d6d74154267)](https://www.codacy.com/app/1995parham/gosimac?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1995parham/gosimac&amp;utm_campaign=Badge_Grade)
-[![GolangCI](https://golangci.com/badges/github.com/1995parham/gosimac.svg)](https://golangci.com)
 [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/1995parham/gosimac)
 [![GoReleaser](https://img.shields.io/badge/powered%20by-goreleaser-green.svg?style=flat-square)](https://github.com/goreleaser)
 
