@@ -23,6 +23,9 @@ import (
 	"github.com/urfave/cli"
 )
 
+// FetchedImages is a default number for fetching images from sources
+const FetchedImages = 10
+
 func picturesDir() string {
 	usr, err := user.Current()
 	if err != nil {
@@ -68,7 +71,7 @@ func main() {
 				cli.IntFlag{
 					Name:  "n",
 					Usage: "The number of photos to return",
-					Value: 10,
+					Value: FetchedImages,
 				},
 				cli.StringFlag{
 					Name:  "q",
@@ -98,7 +101,7 @@ func main() {
 				cli.IntFlag{
 					Name:  "n",
 					Usage: "The number of photos to return",
-					Value: 10,
+					Value: FetchedImages,
 				},
 				cli.IntFlag{
 					Name:  "i",
