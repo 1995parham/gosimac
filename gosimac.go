@@ -19,6 +19,7 @@ import (
 	"github.com/1995parham/gosimac/bing"
 	"github.com/1995parham/gosimac/core"
 	"github.com/1995parham/gosimac/unsplash"
+	"github.com/fatih/color"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
@@ -51,6 +52,12 @@ func main() {
 	app.Name = "GoSiMac"
 	app.Usage = "Fetch the wallpaper from Bings, Wikimedia ..."
 	app.Version = "3.0.0"
+	app.Authors = []cli.Author{
+		cli.Author{
+			Name:  "Parham Alvani",
+			Email: "parham.alvani@gmail.com",
+		},
+	}
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "p",
@@ -126,13 +133,13 @@ func main() {
 
 // run runs given source on given path and waits for its results
 func run(p string, s core.Source, _ *cli.Context) error {
-	fmt.Println(">>> Source")
-	fmt.Printf("%+v\n", s)
-	fmt.Println(">>>")
+	fmt.Println(color.CyanString(">>> Source"))
+	fmt.Printf(color.CyanString("%+v\n", s))
+	fmt.Println(color.CyanString(">>>"))
 
-	fmt.Println(">>> Path")
-	fmt.Printf("%s\n", p)
-	fmt.Println(">>>")
+	fmt.Println(color.GreenString(">>> Path"))
+	fmt.Printf(color.GreenString("%s\n", p))
+	fmt.Println(color.GreenString(">>>"))
 
 	a := core.NewApp(p, s)
 	if err := a.Run(); err != nil {
