@@ -53,7 +53,7 @@ func main() {
 	app.Usage = "Fetch the wallpaper from Bings, Wikimedia ..."
 	app.Version = "3.0.0"
 	app.Authors = []cli.Author{
-		cli.Author{
+		{
 			Name:  "Parham Alvani",
 			Email: "parham.alvani@gmail.com",
 		},
@@ -134,11 +134,11 @@ func main() {
 // run runs given source on given path and waits for its results
 func run(p string, s core.Source, _ *cli.Context) error {
 	fmt.Println(color.CyanString(">>> Source"))
-	fmt.Printf(color.CyanString("%+v\n", s))
+	fmt.Println(color.CyanString("%+v", s))
 	fmt.Println(color.CyanString(">>>"))
 
 	fmt.Println(color.GreenString(">>> Path"))
-	fmt.Printf(color.GreenString("%s\n", p))
+	fmt.Println(color.GreenString("%s", p))
 	fmt.Println(color.GreenString(">>>"))
 
 	a := core.NewApp(p, s)
