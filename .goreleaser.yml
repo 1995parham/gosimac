@@ -1,3 +1,4 @@
+---
 project_name: gosimac
 
 release:
@@ -16,7 +17,7 @@ builds:
       - "386"
     goarm:
       - "6"
-    main: ./gosimac.go
+    main: ./main.go
     ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
 
 archive:
