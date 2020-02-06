@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/1995parham/gosimac/cmd/bing"
 	"github.com/1995parham/gosimac/cmd/common"
+	"github.com/1995parham/gosimac/cmd/unsplash"
 	"github.com/spf13/cobra"
 )
 
@@ -20,8 +22,11 @@ func Execute() {
 		Version: "4.0.0",
 	}
 
-	root.Flags().StringP(common.FlagPath, "p", common.DefaultPath(), "migration folder path")
-	root.Flags().IntP(common.FlagCount, "n", common.DefaultCount, "The number of photos to return")
+	unsplash.Register(root)
+	bing.Register(root)
+
+	root.PersistentFlags().StringP(common.FlagPath, "p", common.DefaultPath(), "A path to store the photos")
+	root.PersistentFlags().IntP(common.FlagCount, "n", common.DefaultCount, "The number of photos to return")
 
 	if err := root.Execute(); err != nil {
 		fmt.Printf("error: %s\n", err.Error())
