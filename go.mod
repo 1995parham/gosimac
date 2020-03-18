@@ -10,6 +10,8 @@ require (
 	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
+	github.com/schollz/progressbar v1.0.0
+	github.com/schollz/progressbar/v2 v2.15.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v0.0.6
 	github.com/spf13/pflag v1.0.5 // indirect

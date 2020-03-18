@@ -21,6 +21,7 @@ import (
 	"runtime"
 	"sync"
 
+	"github.com/schollz/progressbar"
 	"github.com/sirupsen/logrus"
 )
 
@@ -29,6 +30,7 @@ import (
 type App struct {
 	source Source
 	path   string
+	bar    *progressbar.ProgressBar
 
 	// these streams connect fetch and store stage
 	fetchStream chan int
@@ -64,6 +66,7 @@ func (a *App) Run() error {
 
 	logrus.Infof("%d Images are available from %s", n, a.source.Name())
 	a.wait.Add(n)
+	a.bar = progressbar.New(n)
 
 	go func() {
 		for i := 0; i < n; i++ {
@@ -104,39 +107,44 @@ func (a *App) store() {
 	logrus.Infof("Store from %s", a.source.Name())
 
 	for image := range a.storeStream {
-		path := path.Join(
-			a.path,
-			fmt.Sprintf("%s-%s", a.source.Name(), image.name),
-		)
+		func() {
+			defer a.wait.Done()
+			defer func() {
+				if err := a.bar.Add(1); err != nil {
+					logrus.Infof("progress bar failed %s", err)
+				}
+			}()
 
-		if _, err := os.Stat(path); err == nil {
-			logrus.Infof("%s is already exists", path)
+			path := path.Join(
+				a.path,
+				fmt.Sprintf("%s-%s", a.source.Name(), image.name),
+			)
+
+			if _, err := os.Stat(path); err == nil {
+				logrus.Infof("%s is already exists", path)
+				return
+			}
+
+			file, err := os.Create(path)
+			if err != nil {
+				logrus.Errorf("os.Create: %v", err)
+				return
+			}
+
+			bytes, err := io.Copy(file, image.data)
+			if err != nil {
+				logrus.Errorf("io.Copy (%d bytes): %v", bytes, err)
+			}
+
+			if err := file.Close(); err != nil {
+				logrus.Errorf("(*os.File).Close: %v", err)
+			}
+
+			if err := image.data.Close(); err != nil {
+				logrus.Errorf("(*io.ReadCloser).Close: %v", err)
+			}
+
 			a.wait.Done()
-
-			continue
-		}
-
-		file, err := os.Create(path)
-		if err != nil {
-			logrus.Errorf("os.Create: %v", err)
-			a.wait.Done()
-
-			continue
-		}
-
-		bytes, err := io.Copy(file, image.data)
-		if err != nil {
-			logrus.Errorf("io.Copy (%d bytes): %v", bytes, err)
-		}
-
-		if err := file.Close(); err != nil {
-			logrus.Errorf("(*os.File).Close: %v", err)
-		}
-
-		if err := image.data.Close(); err != nil {
-			logrus.Errorf("(*io.ReadCloser).Close: %v", err)
-		}
-
-		a.wait.Done()
+		}()
 	}
 }
