@@ -21,7 +21,6 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/schollz/progressbar"
 	"github.com/sirupsen/logrus"
 )
 
@@ -30,7 +29,6 @@ import (
 type App struct {
 	source Source
 	path   string
-	bar    *progressbar.ProgressBar
 
 	// these streams connect fetch and store stage
 	fetchStream chan int
@@ -66,7 +64,6 @@ func (a *App) Run() error {
 
 	logrus.Infof("%d Images are available from %s", n, a.source.Name())
 	a.wait.Add(n)
-	a.bar = progressbar.New(n)
 
 	go func() {
 		for i := 0; i < n; i++ {
@@ -109,11 +106,6 @@ func (a *App) store() {
 	for image := range a.storeStream {
 		func() {
 			defer a.wait.Done()
-			defer func() {
-				if err := a.bar.Add(1); err != nil {
-					logrus.Infof("progress bar failed %s", err)
-				}
-			}()
 
 			path := path.Join(
 				a.path,
@@ -143,8 +135,6 @@ func (a *App) store() {
 			if err := image.data.Close(); err != nil {
 				logrus.Errorf("(*io.ReadCloser).Close: %v", err)
 			}
-
-			a.wait.Done()
 		}()
 	}
 }
