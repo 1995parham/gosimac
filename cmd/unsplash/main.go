@@ -41,9 +41,9 @@ func Register(root *cobra.Command) {
 		},
 	}
 
-	cmd.Flags().StringP("query", "q", "", "Limit selection to photos matching a search term.")
+	cmd.Flags().StringP(flagQuery, "q", "", "Limit selection to photos matching a search term.")
 	cmd.Flags().StringP(
-		"orientation",
+		flagOrientation,
 		"o",
 		"landscape",
 		"Filter search results by photo orientation, Valid values are landscape, portrait, and squarish.",
