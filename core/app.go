@@ -24,8 +24,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// App is a GoSiMac application. It contains all gosimac
-// functionality. it fetchs background from given source and store them in the given path.
+// App is a GoSiMac application. It contains all gosimac functionality.
+// it fetchs background from given source and store them in the given path.
 type App struct {
 	source Source
 	path   string
@@ -37,13 +37,13 @@ type App struct {
 	wait sync.WaitGroup
 }
 
-// image contains name and bytes of the fetched image
+// image contains name and bytes of the fetched image.
 type image struct {
 	name string
 	data io.ReadCloser
 }
 
-// NewApp creates new app from given source
+// NewApp creates new app from given source.
 func NewApp(path string, source Source) *App {
 	return &App{
 		source: source,
@@ -54,7 +54,7 @@ func NewApp(path string, source Source) *App {
 	}
 }
 
-// Run application that fetches images and store them
+// Run application that fetches images and store them.
 func (a *App) Run() error {
 	// finds number of the images
 	n, err := a.source.Init()
@@ -80,12 +80,12 @@ func (a *App) Run() error {
 	return nil
 }
 
-// Wait waits until all images are fetched
+// Wait waits until all images are fetched.
 func (a *App) Wait() {
 	a.wait.Wait()
 }
 
-// fetch runs the fetch stage
+// fetch runs the fetch stage.
 func (a *App) fetch() {
 	logrus.Infof("Fetch from %s", a.source.Name())
 
@@ -99,7 +99,7 @@ func (a *App) fetch() {
 	}
 }
 
-// store runs the store stage
+// store runs the store stage.
 func (a *App) store() {
 	logrus.Infof("Store from %s", a.source.Name())
 

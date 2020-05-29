@@ -8,7 +8,7 @@ import (
 
 const flagIndex = "index"
 
-// Register registers bing command
+// Register registers bing command.
 func Register(root *cobra.Command) {
 	cmd := &cobra.Command{
 		Use:     "bing",

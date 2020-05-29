@@ -1,6 +1,7 @@
 package unsplash
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,10 +11,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// ErrRequestFailed indicates a general error in service request.
+var ErrRequestFailed = errors.New("request failed")
+
 // nolint: gosec
 const token = "4c483af1b27cf8d55fc29504bc48e3755e47eb7a3dd3a320e92b23fc4e5aa1b8"
 
-// Source is source implmentation for unsplash image service
+// Source is source implmentation for unsplash image service.
 type Source struct {
 	response    []Image
 	N           int
@@ -21,7 +25,7 @@ type Source struct {
 	Orientation string
 }
 
-// Init initiates source and return number of available images
+// Init initiates source and return number of available images.
 func (s *Source) Init() (int, error) {
 	resp, err := resty.New().
 		SetHeader("Accept-Version", "v1").
@@ -38,18 +42,18 @@ func (s *Source) Init() (int, error) {
 	}
 
 	if resp.StatusCode() != http.StatusOK {
-		return 0, fmt.Errorf("invalid response: %s", resp.Status())
+		return 0, ErrRequestFailed
 	}
 
 	return len(s.response), nil
 }
 
-// Name returns source name
+// Name returns source name.
 func (s *Source) Name() string {
 	return "unsplash"
 }
 
-// Fetch fetches given index from source
+// Fetch fetches given index from source.
 func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 	image := s.response[index]
 

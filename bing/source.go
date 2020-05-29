@@ -2,6 +2,7 @@
 package bing
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,14 +12,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Source is source implmentation for bing everyday image
+// ErrRequestFailed indicates a general error in service request.
+var ErrRequestFailed = errors.New("request failed")
+
+// Source is source implmentation for bing everyday image.
 type Source struct {
 	response Response
 	N        int
 	Index    int
 }
 
-// Init initiates source and return number of available images
+// Init initiates source and return number of available images.
 func (s *Source) Init() (int, error) {
 	resp, err := resty.New().
 		SetHostURL("https://www.bing.com").
@@ -33,19 +37,19 @@ func (s *Source) Init() (int, error) {
 		return 0, err
 	}
 
-	if resp.StatusCode() != http.StatusOK {
-		return 0, fmt.Errorf("invalid response: %s", resp.Status())
+	if !resp.IsSuccess() {
+		return 0, ErrRequestFailed
 	}
 
 	return len(s.response.Images), nil
 }
 
-// Name returns source name
+// Name returns source name.
 func (s *Source) Name() string {
 	return "bing"
 }
 
-// Fetch fetches given index from source
+// Fetch fetches given index from source.
 func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 	image := s.response.Images[index]
 

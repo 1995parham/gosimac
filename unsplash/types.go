@@ -1,6 +1,6 @@
 package unsplash
 
-// Image represents unsplash image information
+// Image represents unsplash image information.
 type Image struct {
 	ID   string `json:"id"`
 	URLs struct {

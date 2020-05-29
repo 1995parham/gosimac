@@ -9,7 +9,7 @@ import (
 const flagQuery = "query"
 const flagOrientation = "orientation"
 
-// Register registers unsplash command
+// Register registers unsplash command.
 func Register(root *cobra.Command) {
 	cmd := &cobra.Command{
 		Use:     "unsplash",
