@@ -11,14 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// FlagPath flag indicates where to store the wallpapers.
-const FlagPath = "path"
+const (
+	// FlagPath flag indicates where to store the wallpapers.
+	FlagPath = "path"
 
-// FlagCount flag indicates number of fetching images from source.
-const FlagCount = "number"
+	// FlagCount flag indicates number of fetching images from source.
+	FlagCount = "number"
 
-// DefaultCount is a default number of fetching images from sources.
-const DefaultCount = 10
+	// DefaultCount is a default number of fetching images from sources.
+	DefaultCount = 10
+)
 
 // DefaultPath is a default path for storing the wallpapers.
 func DefaultPath() string {
@@ -28,7 +30,6 @@ func DefaultPath() string {
 	}
 
 	p := path.Join(usr.HomeDir, "Pictures", "GoSiMac")
-
 	if _, err := os.Stat(p); err != nil {
 		if err := os.Mkdir(p, 0755); err != nil {
 			log.Fatalf("os.Mkdir: %v", err)
@@ -39,6 +40,7 @@ func DefaultPath() string {
 }
 
 // Run runs given source on given path and waits for its results.
+// nolint: gofumpt
 func Run(s core.Source, cmd *cobra.Command) error {
 	p, err := cmd.Flags().GetString(FlagPath)
 	if err != nil {

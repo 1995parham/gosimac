@@ -16,7 +16,7 @@ const ExitFailure = 1
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	var root = &cobra.Command{
+	root := &cobra.Command{
 		Use:     "GoSiMac",
 		Short:   "Fetch the wallpaper from Bings, Wikimedia ...",
 		Version: "4.0.0",

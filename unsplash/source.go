@@ -59,13 +59,12 @@ func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 
 	logrus.Infof("Getting %s (%s)", image.ID, image.Description)
 
-	// nolint: bodyclose
-	resp, err := http.Get(image.URLs.Full)
+	resp, err := resty.New().R().Get(image.URLs.Full)
 	if err != nil {
 		return "", nil, err
 	}
 
 	logrus.Infof("%s was gotten", image.ID)
 
-	return fmt.Sprintf("%s.jpg", image.ID), resp.Body, nil
+	return fmt.Sprintf("%s.jpg", image.ID), resp.RawBody(), nil
 }

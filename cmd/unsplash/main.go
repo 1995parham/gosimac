@@ -6,8 +6,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const flagQuery = "query"
-const flagOrientation = "orientation"
+const (
+	flagQuery       = "query"
+	flagOrientation = "orientation"
+)
 
 // Register registers unsplash command.
 func Register(root *cobra.Command) {

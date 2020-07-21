@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 	"strconv"
 
 	"github.com/go-resty/resty/v2"
@@ -55,13 +54,12 @@ func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 
 	logrus.Infof("Getting %s", image.StartDate)
 
-	// nolint: bodyclose
-	resp, err := http.Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
+	resp, err := resty.New().R().Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
 	if err != nil {
 		return "", nil, err
 	}
 
 	logrus.Infof("%s was gotten", image.StartDate)
 
-	return fmt.Sprintf("%s.jpg", image.FullStartDate), resp.Body, nil
+	return fmt.Sprintf("%s.jpg", image.FullStartDate), resp.RawBody(), nil
 }
