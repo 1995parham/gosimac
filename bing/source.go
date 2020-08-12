@@ -54,7 +54,7 @@ func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 
 	logrus.Infof("Getting %s", image.StartDate)
 
-	resp, err := resty.New().R().Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
+	resp, err := resty.New().R().SetDoNotParseResponse(true).Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
 	if err != nil {
 		return "", nil, err
 	}
