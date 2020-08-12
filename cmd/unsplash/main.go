@@ -39,6 +39,7 @@ func Register(root *cobra.Command) {
 				Query:       q,
 				Orientation: o,
 			}
+
 			return common.Run(s, cmd)
 		},
 	}
