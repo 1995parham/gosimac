@@ -30,6 +30,7 @@ func Register(root *cobra.Command) {
 				N:     n,
 				Index: i,
 			}
+
 			return common.Run(b, cmd)
 		},
 	}

@@ -93,6 +93,7 @@ func (a *App) fetch() {
 		name, data, err := a.source.Fetch(index)
 		if err != nil {
 			a.wait.Done()
+
 			continue
 		}
 		a.storeStream <- image{name, data}
@@ -114,12 +115,14 @@ func (a *App) store() {
 
 			if _, err := os.Stat(path); err == nil {
 				logrus.Infof("%s is already exists", path)
+
 				return
 			}
 
 			file, err := os.Create(path)
 			if err != nil {
 				logrus.Errorf("os.Create: %v", err)
+
 				return
 			}
 
