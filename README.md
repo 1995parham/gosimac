@@ -8,16 +8,52 @@
 
 ## Introduction
 
-GoSiMac downloads Bing daily wallpapers, random images from Unsplash, and etc.
-for you to have a beautiful wallpaper on your desktop whenever you want.
-Following command download unsplash Tehran images for you:
-
-```sh
-gosimac u -q Tehran
-```
-
-*gosimac* stores images in `$HOME/Pictures/GoSiMac`.
-
+*gosimac* downloads Bing's daily wallpapers, Unsplash's random images, and etc. for you to have a beautiful wallpaper on your desktop whenever you want.
 Personally, I wrote this to have fun and help one of my friends who is not among us right now. :disappointed:
 
+## Installation
+### brew
+```
+brew install 1995parham/tap/gosimac
+```
+
+## Usage
+```sh
+Usage:
+  GoSiMac [command]
+
+Available Commands:
+  bing        fetches images from https://bing.com
+  help        Help about any command
+  unsplash    fetches images from https://unsplash.org
+
+Flags:
+  -h, --help          help for GoSiMac
+  -n, --number int    The number of photos to return (default 10)
+  -p, --path string   A path to store the photos (default "/home/parham/Pictures/GoSiMac")
+  -v, --version       version for GoSiMac
+```
+
+As an example, the following command downloads 10 images from unsplash while using Tehran as a search query.
+
+```sh
+gosimac u -q Tehran -n 10
+```
+
+By default, *gosimac* stores images in `$HOME/Pictures/GoSiMac`.
+
+## Contribution
 This module is highly customizable and new sources can easily add just by implementing source interface.
+
+```go
+// Source represents source for image background.
+type Source interface {
+	Init() (int, error)                             // call once on source and return number of available images to fetch
+	Name() string                                   // name of source in string format
+	Fetch(index int) (string, io.ReadCloser, error) // fetch image from source
+}
+```
+
+The `Init` method is called on initiation and returns number of available images to download.
+Then for each image `Fetch` is called and the result is stored at the user specific location.
+By implementing this interface you can create new sources for *gosimac*.
