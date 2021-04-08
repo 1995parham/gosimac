@@ -1,6 +1,8 @@
 package unsplash
 
 import (
+	"fmt"
+
 	"github.com/1995parham/gosimac/cmd/common"
 	"github.com/1995parham/gosimac/unsplash"
 	"github.com/spf13/cobra"
@@ -13,6 +15,7 @@ const (
 
 // Register registers unsplash command.
 func Register(root *cobra.Command) {
+	// nolint: exhaustivestruct
 	cmd := &cobra.Command{
 		Use:     "unsplash",
 		Aliases: []string{"u"},
@@ -21,17 +24,17 @@ func Register(root *cobra.Command) {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := cmd.Flags().GetInt(common.FlagCount)
 			if err != nil {
-				return err
+				return fmt.Errorf("count flag parse failed: %w", err)
 			}
 
 			q, err := cmd.Flags().GetString(flagQuery)
 			if err != nil {
-				return err
+				return fmt.Errorf("query flag parse failed: %w", err)
 			}
 
 			o, err := cmd.Flags().GetString(flagOrientation)
 			if err != nil {
-				return err
+				return fmt.Errorf("orientation flag parse failed: %w", err)
 			}
 
 			s := &unsplash.Source{

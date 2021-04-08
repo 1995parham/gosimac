@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/1995parham/gosimac/cmd/bing"
@@ -16,6 +16,7 @@ const ExitFailure = 1
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	// nolint: exhaustivestruct
 	root := &cobra.Command{
 		Use:     "GoSiMac",
 		Short:   "Fetch the wallpaper from Bings, Wikimedia ...",
@@ -29,7 +30,7 @@ func Execute() {
 	root.PersistentFlags().IntP(common.FlagCount, "n", common.DefaultCount, "The number of photos to return")
 
 	if err := root.Execute(); err != nil {
-		fmt.Printf("error: %s\n", err.Error())
+		log.Printf("error: %s\n", err.Error())
 		os.Exit(ExitFailure)
 	}
 }

@@ -1,13 +1,14 @@
 package common
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"os/user"
 	"path"
 
 	"github.com/1995parham/gosimac/core"
-	"github.com/fatih/color"
-	"github.com/labstack/gommon/log"
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +27,7 @@ const (
 func DefaultPath() string {
 	usr, err := user.Current()
 	if err != nil {
-		log.Errorf("user.Current: %v", err)
+		log.Fatalf("user.Current: %v", err)
 	}
 
 	p := path.Join(usr.HomeDir, "Pictures", "GoSiMac")
@@ -40,20 +41,14 @@ func DefaultPath() string {
 }
 
 // Run runs given source on given path and waits for its results.
-// nolint: gofumpt
 func Run(s core.Source, cmd *cobra.Command) error {
 	p, err := cmd.Flags().GetString(FlagPath)
 	if err != nil {
-		return err
+		return fmt.Errorf("flag path parse failed: %w", err)
 	}
 
-	cmd.Println(color.CyanString(">>> Source"))
-	cmd.Println(color.CyanString("%+v", s))
-	cmd.Println(color.CyanString(">>>"))
-
-	cmd.Println(color.GreenString(">>> Path"))
-	cmd.Println(color.GreenString("%s", p))
-	cmd.Println(color.GreenString(">>>"))
+	pterm.Description.Printf("Source: %+v\n", s)
+	pterm.Description.Printf("Path: %s\n", p)
 
 	a := core.NewApp(p, s)
 	if err := a.Run(); err != nil {

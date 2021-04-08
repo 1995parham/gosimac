@@ -21,7 +21,7 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/sirupsen/logrus"
+	"github.com/pterm/pterm"
 )
 
 // App is a GoSiMac application. It contains all gosimac functionality.
@@ -62,7 +62,7 @@ func (a *App) Run() error {
 		return err
 	}
 
-	logrus.Infof("%d Images are available from %s", n, a.source.Name())
+	pterm.Warning.Printf("%d Images are available from %s\n", n, a.source.Name())
 	a.wait.Add(n)
 
 	go func() {
@@ -87,8 +87,6 @@ func (a *App) Wait() {
 
 // fetch runs the fetch stage.
 func (a *App) fetch() {
-	logrus.Infof("Fetch from %s", a.source.Name())
-
 	for index := range a.fetchStream {
 		name, data, err := a.source.Fetch(index)
 		if err != nil {
@@ -102,8 +100,6 @@ func (a *App) fetch() {
 
 // store runs the store stage.
 func (a *App) store() {
-	logrus.Infof("Store from %s", a.source.Name())
-
 	for image := range a.storeStream {
 		func() {
 			defer a.wait.Done()
@@ -114,29 +110,29 @@ func (a *App) store() {
 			)
 
 			if _, err := os.Stat(path); err == nil {
-				logrus.Infof("%s is already exists", path)
+				pterm.Warning.Printf("%s is already exists\n", path)
 
 				return
 			}
 
 			file, err := os.Create(path)
 			if err != nil {
-				logrus.Errorf("os.Create: %v", err)
+				pterm.Error.Printf("os.Create: %v\n", err)
 
 				return
 			}
 
 			bytes, err := io.Copy(file, image.data)
 			if err != nil {
-				logrus.Errorf("io.Copy (%d bytes): %v", bytes, err)
+				pterm.Error.Printf("io.Copy (%d bytes): %v\n", bytes, err)
 			}
 
 			if err := file.Close(); err != nil {
-				logrus.Errorf("(*os.File).Close: %v", err)
+				pterm.Error.Printf("(*os.File).Close: %v", err)
 			}
 
 			if err := image.data.Close(); err != nil {
-				logrus.Errorf("(*io.ReadCloser).Close: %v", err)
+				pterm.Error.Printf("(*io.ReadCloser).Close: %v", err)
 			}
 		}()
 	}

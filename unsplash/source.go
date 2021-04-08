@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/sirupsen/logrus"
+	"github.com/pterm/pterm"
 )
 
 // ErrRequestFailed indicates a general error in service request.
@@ -57,14 +57,14 @@ func (s *Source) Name() string {
 func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 	image := s.response[index]
 
-	logrus.Infof("Getting %s (%s)", image.ID, image.Description)
+	pterm.Info.Printf("Getting %s (%s)\n", image.ID, image.Description)
 
 	resp, err := resty.New().R().SetDoNotParseResponse(true).Get(image.URLs.Full)
 	if err != nil {
 		return "", nil, err
 	}
 
-	logrus.Infof("%s was gotten", image.ID)
+	pterm.Success.Printf("%s was gotten\n", image.ID)
 
 	return fmt.Sprintf("%s.jpg", image.ID), resp.RawBody(), nil
 }
