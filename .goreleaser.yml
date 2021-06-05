@@ -6,6 +6,8 @@ release:
     owner: 1995parham
     name: gosimac
 
+checksum: {}
+
 builds:
   - binary: gosimac
     goos:
@@ -17,20 +19,7 @@ builds:
     main: ./main.go
 
 archives:
-  - format: tar.gz
-    name_template: '{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{.Arm }}{{ end }}'
-    files:
-      - licence*
-      - LICENCE*
-      - license*
-      - LICENSE*
-      - readme*
-      - README*
-      - changelog*
-      - CHANGELOG*
-brews:
-  - name: gosimac
-    tap:
-      owner: 1995parham
-      name: homebrew-tap
-    description: "Fetch the wallpaper from Bings, Unsplash ..."
+  - id: binary
+    format: binary
+  - id: default
+    format: tar.gz
