@@ -50,6 +50,8 @@ gosimac u -q Tehran -n 10
 ```powershell
 set http_proxy "http://127.0.0.1:1080"
 set https_proxy "http://127.0.0.1:1080"
+$env:HTTP_PROXY = "http://127.0.0.1:1080"
+$env:HTTPS_PROXY = "http://127.0.0.1:1080"
 
 gosimac u -q Tehran -n 10
 
