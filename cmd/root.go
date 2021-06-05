@@ -18,9 +18,8 @@ const ExitFailure = 1
 func Execute() {
 	// nolint: exhaustivestruct
 	root := &cobra.Command{
-		Use:     "GoSiMac",
-		Short:   "Fetch the wallpaper from Bings, Wikimedia ...",
-		Version: "4.0.0",
+		Use:   "GoSiMac",
+		Short: "Fetch the wallpaper from Bings, Wikimedia ...",
 	}
 
 	unsplash.Register(root)

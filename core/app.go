@@ -51,6 +51,8 @@ func NewApp(path string, source Source) *App {
 
 		fetchStream: make(chan int),
 		storeStream: make(chan image),
+
+		wait: sync.WaitGroup{},
 	}
 }
 
