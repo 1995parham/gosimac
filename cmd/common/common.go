@@ -41,6 +41,7 @@ func DefaultPath() string {
 }
 
 // Run runs given source on given path and waits for its results.
+// this used by source specific sub commands.
 func Run(s core.Source, cmd *cobra.Command) error {
 	p, err := cmd.Flags().GetString(FlagPath)
 	if err != nil {
@@ -52,7 +53,7 @@ func Run(s core.Source, cmd *cobra.Command) error {
 
 	a := core.NewApp(p, s)
 	if err := a.Run(); err != nil {
-		return fmt.Errorf("subcommand failed: %w", err)
+		return fmt.Errorf("enigne failed: %w", err)
 	}
 
 	a.Wait()
