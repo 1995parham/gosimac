@@ -1,6 +1,8 @@
 package bing
 
 import (
+	"fmt"
+
 	"github.com/1995parham/gosimac/bing"
 	"github.com/1995parham/gosimac/cmd/common"
 	"github.com/spf13/cobra"
@@ -19,12 +21,12 @@ func Register(root *cobra.Command) {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := cmd.Flags().GetInt(common.FlagCount)
 			if err != nil {
-				return err
+				return fmt.Errorf("count flag parse failed: %w", err)
 			}
 
 			i, err := cmd.Flags().GetInt(flagIndex)
 			if err != nil {
-				return err
+				return fmt.Errorf("index flag parse failed: %w", err)
 			}
 
 			b := &bing.Source{
@@ -32,7 +34,11 @@ func Register(root *cobra.Command) {
 				Index: i,
 			}
 
-			return common.Run(b, cmd)
+			if err := common.Run(b, cmd); err != nil {
+				return fmt.Errorf("bing engine failed: %w", err)
+			}
+
+			return nil
 		},
 	}
 

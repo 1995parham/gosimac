@@ -43,7 +43,11 @@ func Register(root *cobra.Command) {
 				Orientation: o,
 			}
 
-			return common.Run(s, cmd)
+			if err := common.Run(s, cmd); err != nil {
+				return fmt.Errorf("unsplash engine failed: %w", err)
+			}
+
+			return nil
 		},
 	}
 

@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"log"
 	"os"
 
 	"github.com/1995parham/gosimac/cmd/bing"
 	"github.com/1995parham/gosimac/cmd/common"
 	"github.com/1995parham/gosimac/cmd/unsplash"
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +30,7 @@ func Execute() {
 	root.PersistentFlags().IntP(common.FlagCount, "n", common.DefaultCount, "The number of photos to return")
 
 	if err := root.Execute(); err != nil {
-		log.Printf("error: %s\n", err.Error())
+		pterm.Error.Println(err.Error())
 		os.Exit(ExitFailure)
 	}
 }
