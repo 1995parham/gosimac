@@ -12,14 +12,6 @@
 _gosimac_ downloads Bing's daily wallpapers, Unsplash's random images, and etc. for you to have a beautiful wallpaper on your desktop whenever you want.
 Personally, I wrote this to have fun and help one of my friends who is not among us right now. :disappointed:
 
-## Installation
-
-### brew
-
-```
-brew install 1995parham/tap/gosimac
-```
-
 ## Usage
 
 ```sh
