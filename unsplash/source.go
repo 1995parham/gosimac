@@ -38,7 +38,7 @@ func (s *Source) Init() (int, error) {
 		SetQueryParam("query", s.Query).
 		Get("/photos/random")
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("network failure: %w", err)
 	}
 
 	if resp.StatusCode() != http.StatusOK {
@@ -61,7 +61,11 @@ func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 
 	resp, err := resty.New().R().SetDoNotParseResponse(true).Get(image.URLs.Full)
 	if err != nil {
-		return "", nil, err
+		return "", nil, fmt.Errorf("network failure: %w", err)
+	}
+
+	if resp.StatusCode() != http.StatusOK {
+		return "", nil, ErrRequestFailed
 	}
 
 	pterm.Success.Printf("%s was gotten\n", image.ID)

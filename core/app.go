@@ -59,7 +59,7 @@ func (a *App) Run() error {
 	// finds number of the images
 	n, err := a.source.Init()
 	if err != nil {
-		return err
+		return fmt.Errorf("source initiation failed: %w", err)
 	}
 
 	pterm.Warning.Printf("%d Images are available from %s\n", n, a.source.Name())

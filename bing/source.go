@@ -5,10 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"strconv"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/sirupsen/logrus"
+	"github.com/pterm/pterm"
 )
 
 // ErrRequestFailed indicates a general error in service request.
@@ -33,7 +34,7 @@ func (s *Source) Init() (int, error) {
 		SetQueryParam("n", strconv.Itoa(s.N)).
 		Get("/HPImageArchive.aspx")
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("network failure: %w", err)
 	}
 
 	if !resp.IsSuccess() {
@@ -52,14 +53,18 @@ func (s *Source) Name() string {
 func (s *Source) Fetch(index int) (string, io.ReadCloser, error) {
 	image := s.response.Images[index]
 
-	logrus.Infof("Getting %s", image.StartDate)
+	pterm.Info.Printf("Getting %s", image.StartDate)
 
 	resp, err := resty.New().R().SetDoNotParseResponse(true).Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
 	if err != nil {
-		return "", nil, err
+		return "", nil, fmt.Errorf("network failure: %w", err)
 	}
 
-	logrus.Infof("%s was gotten", image.StartDate)
+	if resp.StatusCode() != http.StatusOK {
+		return "", nil, ErrRequestFailed
+	}
+
+	pterm.Success.Printf("%s was gotten", image.StartDate)
 
 	return fmt.Sprintf("%s.jpg", image.FullStartDate), resp.RawBody(), nil
 }
