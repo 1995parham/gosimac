@@ -10,6 +10,7 @@ const flagIndex = "index"
 
 // Register registers bing command.
 func Register(root *cobra.Command) {
+	// nolint: exhaustivestruct
 	cmd := &cobra.Command{
 		Use:     "bing",
 		Aliases: []string{"b"},
