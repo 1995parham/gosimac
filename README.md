@@ -1,4 +1,5 @@
 # Go Si Mac
+
 [![Drone (cloud)](https://img.shields.io/drone/build/1995parham/gosimac.svg?style=flat-square&logo=drone)](https://cloud.drone.io/1995parham/gosimac)
 [![Docker Pulls](https://img.shields.io/docker/pulls/1995parham/gosimac.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1995parham/gosimac/)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/1995parham/gosimac/latest?style=flat-square&logo=docker)
@@ -8,16 +9,19 @@
 
 ## Introduction
 
-*gosimac* downloads Bing's daily wallpapers, Unsplash's random images, and etc. for you to have a beautiful wallpaper on your desktop whenever you want.
+_gosimac_ downloads Bing's daily wallpapers, Unsplash's random images, and etc. for you to have a beautiful wallpaper on your desktop whenever you want.
 Personally, I wrote this to have fun and help one of my friends who is not among us right now. :disappointed:
 
 ## Installation
+
 ### brew
+
 ```
 brew install 1995parham/tap/gosimac
 ```
 
 ## Usage
+
 ```sh
 Usage:
   GoSiMac [command]
@@ -37,12 +41,24 @@ Flags:
 As an example, the following command downloads 10 images from unsplash while using Tehran as a search query.
 
 ```sh
+export http_proxy="http://127.0.0.1:1080"
+export https_proxy="http://127.0.0.1:1080"
+
 gosimac u -q Tehran -n 10
 ```
 
-By default, *gosimac* stores images in `$HOME/Pictures/GoSiMac`.
+```powershell
+set http_proxy "http://127.0.0.1:1080"
+set https_proxy "http://127.0.0.1:1080"
+
+gosimac u -q Tehran -n 10
+
+```
+
+By default, _gosimac_ stores images in `$HOME/Pictures/GoSiMac`.
 
 ## Contribution
+
 This module is highly customizable and new sources can easily add just by implementing source interface.
 
 ```go
@@ -56,4 +72,4 @@ type Source interface {
 
 The `Init` method is called on initiation and returns number of available images to download.
 Then for each image `Fetch` is called and the result is stored at the user specific location.
-By implementing this interface you can create new sources for *gosimac*.
+By implementing this interface you can create new sources for _gosimac_.
