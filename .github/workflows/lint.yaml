@@ -1,5 +1,5 @@
 ---
-name: golang
+name: lint
 on:
   - push
 jobs:

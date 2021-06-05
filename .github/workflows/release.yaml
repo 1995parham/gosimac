@@ -1,5 +1,5 @@
 ---
-name: golang
+name: release
 on:
   push:
     tags:
@@ -14,5 +14,6 @@ jobs:
       - uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
+          args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
