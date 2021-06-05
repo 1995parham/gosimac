@@ -96,7 +96,10 @@ func (a *App) fetch() {
 
 			continue
 		}
-		a.storeStream <- image{name, data}
+		a.storeStream <- image{
+			name: name,
+			data: data,
+		}
 	}
 }
 

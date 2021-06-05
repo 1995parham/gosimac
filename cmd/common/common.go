@@ -52,7 +52,7 @@ func Run(s core.Source, cmd *cobra.Command) error {
 
 	a := core.NewApp(p, s)
 	if err := a.Run(); err != nil {
-		return err
+		return fmt.Errorf("subcommand failed: %w", err)
 	}
 
 	a.Wait()
