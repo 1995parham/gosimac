@@ -7,6 +7,8 @@
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/1995parham/gosimac?logo=github&style=flat-square)
 ![GitHub Release Date](https://img.shields.io/github/release-date/1995parham/gosimac?logo=github&style=flat-square)
 
+[![AUR package](https://repology.org/badge/version-for-repo/aur/gosimac.svg?style=flat-square)](https://repology.org/project/gosimac/versions)
+
 ## Introduction
 
 _gosimac_ downloads Bing's daily wallpapers, Unsplash's random images, and etc. for you to have a beautiful wallpaper on your desktop whenever you want.
