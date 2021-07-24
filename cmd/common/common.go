@@ -21,6 +21,9 @@ const (
 
 	// DefaultCount is a default number of fetching images from sources.
 	DefaultCount = 10
+
+	// DirectoryPermission used for creating GoSiMac Directory.
+	DirectoryPermission = 0755
 )
 
 // DefaultPath is a default path for storing the wallpapers.
@@ -32,7 +35,7 @@ func DefaultPath() string {
 
 	p := path.Join(usr.HomeDir, "Pictures", "GoSiMac")
 	if _, err := os.Stat(p); err != nil {
-		if err := os.Mkdir(p, 0755); err != nil {
+		if err := os.Mkdir(p, DirectoryPermission); err != nil {
 			log.Fatalf("os.Mkdir: %v", err)
 		}
 	}
