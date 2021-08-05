@@ -2,8 +2,6 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/1995parham/gosimac/release?label=release&logo=github&style=flat-square)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/1995parham/gosimac/lint?label=lint&logo=github&style=flat-square)
-[![Docker Pulls](https://img.shields.io/docker/pulls/1995parham/gosimac.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1995parham/gosimac/)
-![Docker Image Size (tag)](https://img.shields.io/docker/image-size/1995parham/gosimac/latest?style=flat-square&logo=docker)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/1995parham/gosimac?logo=github&style=flat-square)
 ![GitHub Release Date](https://img.shields.io/github/release-date/1995parham/gosimac?logo=github&style=flat-square)
 
