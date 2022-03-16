@@ -1,15 +1,10 @@
 package main
 
 import (
+	"runtime/debug"
+
 	"github.com/1995parham/gosimac/cmd"
 	"github.com/pterm/pterm"
-)
-
-// nolint: gochecknoglobals
-var (
-	version = "dev"
-	commit  = "none"
-	date    = "unknown"
 )
 
 func main() {
@@ -21,7 +16,22 @@ func main() {
 		_ = err
 	}
 
-	pterm.Description.Printf("gosimac %s, commit %s, built at %s\n", version, commit, date)
+	// nolint: varnamelen
+	if bi, ok := debug.ReadBuildInfo(); ok {
+		vcsReversion := ""
+		vcsTime := ""
+
+		for _, value := range bi.Settings {
+			switch value.Key {
+			case "vcs.revision":
+				vcsReversion = value.Value
+			case "vcs.time":
+				vcsTime = value.Value
+			}
+		}
+
+		pterm.Description.Printf("gosimac %s %s %s\n", bi.Main.Version, vcsReversion, vcsTime)
+	}
 
 	cmd.Execute()
 }
