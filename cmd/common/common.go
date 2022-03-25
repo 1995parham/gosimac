@@ -23,7 +23,8 @@ const (
 	DefaultCount = 10
 
 	// DirectoryPermission used for creating GoSiMac Directory.
-	DirectoryPermission = 0755
+	// nolint: gofumpt
+	DirectoryPermission os.FileMode = 0755
 )
 
 // DefaultPath is a default path for storing the wallpapers.
