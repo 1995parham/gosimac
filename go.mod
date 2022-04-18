@@ -4,7 +4,7 @@ module github.com/1995parham/gosimac
 
 require (
 	github.com/go-resty/resty/v2 v2.7.0
-	github.com/pterm/pterm v0.12.40
+	github.com/pterm/pterm v0.12.41
 	github.com/spf13/cobra v1.4.0
 )
 
