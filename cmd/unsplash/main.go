@@ -15,7 +15,7 @@ const (
 
 // Register registers unsplash command.
 func Register(root *cobra.Command) {
-	// nolint: exhaustivestruct
+	// nolint: exhaustruct
 	cmd := &cobra.Command{
 		Use:     "unsplash",
 		Aliases: []string{"u"},

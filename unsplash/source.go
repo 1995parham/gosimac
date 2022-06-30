@@ -28,9 +28,9 @@ type Source struct {
 // Init initiates source and return number of available images.
 func (s *Source) Init() (int, error) {
 	resp, err := resty.New().
+		SetBaseURL("https://api.unsplash.com").
 		SetHeader("Accept-Version", "v1").
 		SetHeader("Authorization", fmt.Sprintf("Client-ID %s", token)).
-		SetHostURL("https://api.unsplash.com").
 		R().
 		SetResult(&s.response).
 		SetQueryParam("count", strconv.Itoa(s.N)).

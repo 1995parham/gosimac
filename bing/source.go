@@ -25,7 +25,7 @@ type Source struct {
 // Init initiates source and return number of available images.
 func (s *Source) Init() (int, error) {
 	resp, err := resty.New().
-		SetHostURL("https://www.bing.com").
+		SetBaseURL("https://www.bing.com").
 		R().
 		SetResult(&s.response).
 		SetQueryParam("format", "js").
