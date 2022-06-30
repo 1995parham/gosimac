@@ -1,37 +1,22 @@
 package main
 
 import (
-	"runtime/debug"
-
 	"github.com/1995parham/gosimac/cmd"
+	"github.com/carlmjohnson/versioninfo"
 	"github.com/pterm/pterm"
+	"github.com/pterm/pterm/putils"
 )
 
 func main() {
 	if err := pterm.DefaultBigText.WithLetters(
-		pterm.NewLettersFromStringWithStyle("Go", pterm.NewStyle(pterm.FgCyan)),
-		pterm.NewLettersFromStringWithStyle("Si", pterm.NewStyle(pterm.FgLightMagenta)),
-		pterm.NewLettersFromStringWithStyle("Mac", pterm.NewStyle(pterm.FgLightRed)),
+		putils.LettersFromStringWithStyle("Go", pterm.NewStyle(pterm.FgCyan)),
+		putils.LettersFromStringWithStyle("Si", pterm.NewStyle(pterm.FgLightMagenta)),
+		putils.LettersFromStringWithStyle("Mac", pterm.NewStyle(pterm.FgLightRed)),
 	).Render(); err != nil {
 		_ = err
 	}
 
-	// nolint: varnamelen
-	if bi, ok := debug.ReadBuildInfo(); ok {
-		vcsReversion := ""
-		vcsTime := ""
-
-		for _, value := range bi.Settings {
-			switch value.Key {
-			case "vcs.revision":
-				vcsReversion = value.Value
-			case "vcs.time":
-				vcsTime = value.Value
-			}
-		}
-
-		pterm.Description.Printf("gosimac %s %s %s\n", bi.Main.Version, vcsReversion, vcsTime)
-	}
+	pterm.Description.Printf("gosimac %s\n", versioninfo.Short())
 
 	cmd.Execute()
 }
