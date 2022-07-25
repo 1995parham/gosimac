@@ -5,14 +5,13 @@ module github.com/1995parham/gosimac
 require (
 	github.com/carlmjohnson/versioninfo v0.22.4
 	github.com/go-resty/resty/v2 v2.7.0
-	github.com/pterm/pterm v0.12.42
+	github.com/pterm/pterm v0.12.44
 	github.com/spf13/cobra v1.5.0
 )
 
 require (
 	atomicgo.dev/cursor v0.1.1 // indirect
 	atomicgo.dev/keyboard v0.2.8 // indirect
-	github.com/atomicgo/cursor v0.0.1 // indirect
 	github.com/containerd/console v1.0.3 // indirect
 	github.com/gookit/color v1.5.1 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
@@ -20,7 +19,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/testify v1.7.2 // indirect
 	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
 	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e // indirect
 	golang.org/x/sys v0.0.0-20220627191245-f75cf1eec38b // indirect
