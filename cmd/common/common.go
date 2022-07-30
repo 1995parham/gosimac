@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/user"
 	"path"
 
 	"github.com/1995parham/gosimac/core"
+	"github.com/adrg/xdg"
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
@@ -29,12 +29,7 @@ const (
 
 // DefaultPath is a default path for storing the wallpapers.
 func DefaultPath() string {
-	usr, err := user.Current()
-	if err != nil {
-		log.Fatalf("user.Current: %v", err)
-	}
-
-	p := path.Join(usr.HomeDir, "Pictures", "GoSiMac")
+	p := path.Join(xdg.UserDirs.Pictures, "GoSiMac")
 	if _, err := os.Stat(p); err != nil {
 		if err := os.Mkdir(p, DirectoryPermission); err != nil {
 			log.Fatalf("os.Mkdir: %v", err)
