@@ -42,6 +42,8 @@ func (s *Source) Init() (int, error) {
 	}
 
 	if resp.StatusCode() != http.StatusOK {
+		pterm.Error.Printf("unplash response code is %d: %s", resp.StatusCode(), resp.String())
+
 		return 0, ErrRequestFailed
 	}
 
