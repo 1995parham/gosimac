@@ -39,7 +39,7 @@ func New(count int, index int, path string) *Bing {
 func (b *Bing) gather() (*Response, error) {
 	r := new(Response)
 
-	resp, err := resty.New().
+	resp, err := b.Client.
 		R().
 		SetResult(r).
 		SetQueryParam("format", "js").
@@ -52,7 +52,7 @@ func (b *Bing) gather() (*Response, error) {
 	}
 
 	if resp.IsError() {
-		pterm.Error.Printf("unplash response code is %d: %s", resp.StatusCode(), resp.String())
+		pterm.Error.Printf("bing response code is %d: %s", resp.StatusCode(), resp.String())
 
 		return nil, ErrRequestFailed
 	}
@@ -68,7 +68,7 @@ func (b *Bing) Fetch() error {
 	}
 
 	for _, image := range r.Images {
-		pterm.Info.Printf("Getting %s", image.StartDate)
+		pterm.Info.Printf("Getting %s\n", image.StartDate)
 
 		resp, err := resty.New().R().SetDoNotParseResponse(true).Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
 		if err != nil {
@@ -76,12 +76,12 @@ func (b *Bing) Fetch() error {
 		}
 
 		if resp.IsError() {
-			pterm.Error.Printf("unplash response code is %d: %s", resp.StatusCode(), resp.String())
+			pterm.Error.Printf("bing response code is %d: %s", resp.StatusCode(), resp.String())
 
 			return ErrRequestFailed
 		}
 
-		pterm.Success.Printf("%s was gotten", image.StartDate)
+		pterm.Success.Printf("%s was gotten\n", image.StartDate)
 
 		go b.Store(image.StartDate, resp.RawBody())
 	}
