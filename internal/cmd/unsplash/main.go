@@ -3,18 +3,26 @@ package unsplash
 import (
 	"fmt"
 
-	"github.com/1995parham/gosimac/cmd/common"
-	"github.com/1995parham/gosimac/unsplash"
+	"github.com/1995parham/gosimac/internal/unsplash"
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
 const (
 	flagQuery       = "query"
 	flagOrientation = "orientation"
+	flagCount       = "numer"
+	flagToken       = "token"
+
+	// DefaultCount is a default number of fetching images from sources.
+	defaultCount = 10
+
+	// nolint: gosec
+	gosimacToken = "4c483af1b27cf8d55fc29504bc48e3755e47eb7a3dd3a320e92b23fc4e5aa1b8"
 )
 
 // Register registers unsplash command.
-func Register(root *cobra.Command) {
+func Register(root *cobra.Command, path string) {
 	// nolint: exhaustruct
 	cmd := &cobra.Command{
 		Use:     "unsplash",
@@ -22,29 +30,34 @@ func Register(root *cobra.Command) {
 		Short:   "fetches images from https://unsplash.org",
 
 		RunE: func(cmd *cobra.Command, args []string) error {
-			n, err := cmd.Flags().GetInt(common.FlagCount)
+			n, err := cmd.Flags().GetInt(flagCount)
 			if err != nil {
 				return fmt.Errorf("count flag parse failed: %w", err)
 			}
+			pterm.Info.Printf("count: %d\n", n)
 
 			q, err := cmd.Flags().GetString(flagQuery)
 			if err != nil {
 				return fmt.Errorf("query flag parse failed: %w", err)
 			}
+			pterm.Info.Printf("query: %s\n", q)
 
 			o, err := cmd.Flags().GetString(flagOrientation)
 			if err != nil {
 				return fmt.Errorf("orientation flag parse failed: %w", err)
 			}
+			pterm.Info.Printf("orientation: %s\n", o)
 
-			s := &unsplash.Source{
-				N:           n,
-				Query:       q,
-				Orientation: o,
+			t, err := cmd.Flags().GetString(flagToken)
+			if err != nil {
+				return fmt.Errorf("token flag parse failed: %w", err)
 			}
+			pterm.Info.Printf("token: %s\n", t)
 
-			if err := common.Run(s, cmd); err != nil {
-				return fmt.Errorf("unsplash engine failed: %w", err)
+			u := unsplash.New(n, q, o, t, path)
+
+			if err := u.Fetch(); err != nil {
+				return fmt.Errorf("bing fetch failed %w", err)
 			}
 
 			return nil
@@ -58,5 +71,7 @@ func Register(root *cobra.Command) {
 		"landscape",
 		"Filter search results by photo orientation, Valid values are landscape, portrait, and squarish.",
 	)
+	cmd.Flags().IntP(flagCount, "n", defaultCount, "The number of photos to return")
+	cmd.Flags().StringP(flagToken, "t", gosimacToken, "The unplash api token")
 	root.AddCommand(cmd)
 }

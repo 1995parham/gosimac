@@ -9,28 +9,35 @@
 
 ## Introduction
 
-_gosimac_ downloads Bing's daily wallpapers, Unsplash's random images, and etc. for you to have a beautiful wallpaper on your desktop whenever you want.
+_gosimac_ downloads Bing's daily wallpapers, Unsplash's random images, etc. for you to have a beautiful wallpaper on your desktop whenever you want.
 Personally, I wrote this to have fun and help one of my friends who is not among us right now. :disappointed:
 
 ## Usage
 
 ```sh
+gosimac rev-4cbe101-dirty
+Fetch the wallpaper from Bings, Unsplash...
+
 Usage:
   GoSiMac [command]
 
 Available Commands:
   bing        fetches images from https://bing.com
+  completion  Generate the autocompletion script for the specified shell
   help        Help about any command
   unsplash    fetches images from https://unsplash.org
 
 Flags:
   -h, --help          help for GoSiMac
-  -n, --number int    The number of photos to return (default 10)
-  -p, --path string   A path to store the photos (default "/home/parham/Pictures/GoSiMac")
-  -v, --version       version for GoSiMac
+  -p, --path string   A path to where photos are stored (default "/home/parham/Pictures/GoSiMac")
+
+Use "GoSiMac [command] --help" for more information about a command.
+
 ```
 
 As an example, the following command downloads 10 images from unsplash while using Tehran as a search query.
+Please note that the proxy setup is related to Iranian sanctions and you may not need to setup any proxy
+to use gosimac.
 
 ```sh
 export http_proxy="http://127.0.0.1:1080"
@@ -49,21 +56,45 @@ gosimac u -q Tehran -n 10
 
 ```
 
-By default, _gosimac_ stores images in `$HOME/Pictures/GoSiMac`.
+By default, _gosimac_ stores images in `$XDG_PICTURES_DIR/GoSiMac (e.g. $HOME/Pictures/GoSiMac)`.
 
 ## Contribution
 
-This module is highly customizable and new sources can easily add just by implementing source interface.
+For adding new source you only need to create a new sub-command in `cmd` package
+and then calling your new source with provided `path`. Also for saving images
+you can use the following helper function:
 
 ```go
-// Source represents source for image background.
-type Source interface {
-	Init() (int, error)                             // call once on source and return number of available images to fetch
-	Name() string                                   // name of source in string format
-	Fetch(index int) (string, io.ReadCloser, error) // fetch image from source
+func (u *Unsplash) Store(name string, content io.ReadCloser) {
+        path := path.Join(
+                u.Path,
+                fmt.Sprintf("%s-%s", u.Prefix, name),
+        )
+
+        if _, err := os.Stat(path); err == nil {
+                pterm.Warning.Printf("%s is already exists\n", path)
+
+                return
+        }
+
+        file, err := os.Create(path)
+        if err != nil {
+                pterm.Error.Printf("os.Create: %v\n", err)
+
+                return
+        }
+
+        bytes, err := io.Copy(file, content)
+        if err != nil {
+                pterm.Error.Printf("io.Copy (%d bytes): %v\n", bytes, err)
+        }
+
+        if err := file.Close(); err != nil {
+                pterm.Error.Printf("(*os.File).Close: %v", err)
+        }
+
+        if err := content.Close(); err != nil {
+                pterm.Error.Printf("(*io.ReadCloser).Close: %v", err)
+        }
 }
 ```
-
-The `Init` method is called on initiation and returns number of available images to download.
-Then for each image `Fetch` is called and the result is stored at the user specific location.
-By implementing this interface you can create new sources for _gosimac_.

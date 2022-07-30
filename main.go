@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/1995parham/gosimac/cmd"
+	"github.com/1995parham/gosimac/internal/cmd"
 	"github.com/carlmjohnson/versioninfo"
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
