@@ -9,12 +9,12 @@
 
 ## Introduction
 
-_gosimac_ downloads Bing's daily wallpapers, Unsplash's random images, etc. for you to have a beautiful wallpaper on your desktop whenever you want.
-Personally, I wrote this to have fun and help one of my friends who is not among us right now. :disappointed:
+_GoSiMac_ downloads Bing's daily wallpapers, Unsplash's random images, etc. for you to have a beautiful wallpaper on your desktop whenever you want.
+Personally, I wrote this to have fun and help one of my friends who are not among us right now. :disappointed:
 
 ## Usage
 
-```sh
+```bash
 gosimac rev-4cbe101-dirty
 Fetch the wallpaper from Bings, Unsplash...
 
@@ -39,7 +39,7 @@ As an example, the following command downloads 10 images from unsplash while usi
 Please note that the proxy setup is related to Iranian sanctions and you may not need to setup any proxy
 to use gosimac.
 
-```sh
+```bash
 export http_proxy="http://127.0.0.1:1080"
 export https_proxy="http://127.0.0.1:1080"
 
@@ -68,7 +68,7 @@ you can use the following helper function:
 func (u *Unsplash) Store(name string, content io.ReadCloser) {
         path := path.Join(
                 u.Path,
-                fmt.Sprintf("%s-%s", u.Prefix, name),
+                fmt.Sprintf("%s-%s.png", u.Prefix, name),
         )
 
         if _, err := os.Stat(path); err == nil {
