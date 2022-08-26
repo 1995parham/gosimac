@@ -95,7 +95,7 @@ func (u *Unsplash) Fetch() error {
 func (u *Unsplash) Store(name string, content io.ReadCloser) {
 	path := path.Join(
 		u.Path,
-		fmt.Sprintf("%s-%s.png", u.Prefix, name),
+		fmt.Sprintf("%s-%s.jpg", u.Prefix, name),
 	)
 
 	if _, err := os.Stat(path); err == nil {

@@ -92,7 +92,7 @@ func (b *Bing) Fetch() error {
 func (b *Bing) Store(name string, content io.ReadCloser) {
 	path := path.Join(
 		b.Path,
-		fmt.Sprintf("%s-%s.png", b.Prefix, name),
+		fmt.Sprintf("%s-%s.jpg", b.Prefix, name),
 	)
 
 	if _, err := os.Stat(path); err == nil {
