@@ -4,6 +4,8 @@ linters:
   disable:
     # it should improve to support more known patterns
     - varnamelen
+    # why even we have this?
+    - nolintlint
     # deprecated linters
     - maligned
     - scopelint
