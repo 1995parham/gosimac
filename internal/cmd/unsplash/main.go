@@ -64,7 +64,7 @@ func Register(root *cobra.Command, path string) {
 			u := unsplash.New(n, q, o, t, path, s)
 
 			if err := u.Fetch(); err != nil {
-				return fmt.Errorf("bing fetch failed %w", err)
+				return fmt.Errorf("unsplash fetch failed %w", err)
 			}
 
 			return nil
