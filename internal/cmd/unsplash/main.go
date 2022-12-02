@@ -13,6 +13,7 @@ const (
 	flagOrientation = "orientation"
 	flagCount       = "numer"
 	flagToken       = "token"
+	flagSize        = "size"
 
 	// DefaultCount is a default number of fetching images from sources.
 	defaultCount = 10
@@ -54,7 +55,13 @@ func Register(root *cobra.Command, path string) {
 			}
 			pterm.Info.Printf("token: %s\n", t)
 
-			u := unsplash.New(n, q, o, t, path)
+			s, err := cmd.Flags().GetString(flagSize)
+			if err != nil {
+				return fmt.Errorf("size flag parse failed: %w", err)
+			}
+			pterm.Info.Printf("size: %s\n", s)
+
+			u := unsplash.New(n, q, o, t, path, s)
 
 			if err := u.Fetch(); err != nil {
 				return fmt.Errorf("bing fetch failed %w", err)
@@ -71,6 +78,7 @@ func Register(root *cobra.Command, path string) {
 		"landscape",
 		"Filter search results by photo orientation, Valid values are landscape, portrait, and squarish.",
 	)
+	cmd.Flags().StringP(flagSize, "s", "full", "Image size on unsplash: small, regular, full and raw")
 	cmd.Flags().IntP(flagCount, "n", defaultCount, "The number of photos to return")
 	cmd.Flags().StringP(flagToken, "t", gosimacToken, "The unplash api token")
 	root.AddCommand(cmd)

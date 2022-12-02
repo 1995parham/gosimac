@@ -15,6 +15,16 @@ import (
 // ErrRequestFailed indicates a general error in service request.
 var ErrRequestFailed = errors.New("request failed")
 
+var ErrInvalidSize = errors.New("invalid size request")
+
+const (
+	RawSize     = "raw"
+	FullSize    = "full"
+	RegularSize = "regular"
+	SmallSize   = "small"
+	ThumbSize   = "thumb"
+)
+
 // Unsplash image provider.
 type Unsplash struct {
 	N           int
@@ -22,15 +32,17 @@ type Unsplash struct {
 	Orientation string
 	Path        string
 	Prefix      string
+	Size        string
 	Client      *resty.Client
 }
 
-func New(count int, query string, orientation string, token string, path string) *Unsplash {
+func New(count int, query string, orientation string, token string, path string, size string) *Unsplash {
 	return &Unsplash{
 		N:           count,
 		Query:       query,
 		Orientation: orientation,
 		Path:        path,
+		Size:        size,
 		Prefix:      "unsplash",
 		Client: resty.New().
 			SetBaseURL("https://api.unsplash.com").
@@ -63,6 +75,7 @@ func (u *Unsplash) gather() ([]Image, error) {
 }
 
 // Fetch images from unsplash based on given critarias.
+// nolint: cyclop
 func (u *Unsplash) Fetch() error {
 	images, err := u.gather()
 	if err != nil {
@@ -73,7 +86,26 @@ func (u *Unsplash) Fetch() error {
 	for _, image := range images {
 		pterm.Info.Printf("Getting %s (%s)\n", image.ID, image.Description)
 
-		resp, err := resty.New().R().SetDoNotParseResponse(true).Get(image.URLs.Full)
+		var url string
+
+		switch u.Size {
+		case RawSize:
+			url = image.URLs.Raw
+		case FullSize:
+			url = image.URLs.Full
+		case RegularSize:
+			url = image.URLs.Regular
+		case SmallSize:
+			url = image.URLs.Small
+		case ThumbSize:
+			url = image.URLs.Thumb
+		}
+
+		if url == "" {
+			return ErrInvalidSize
+		}
+
+		resp, err := resty.New().R().SetDoNotParseResponse(true).Get(url)
 		if err != nil {
 			return fmt.Errorf("network failure: %w", err)
 		}
