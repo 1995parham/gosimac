@@ -1,7 +1,6 @@
 # Go Si Mac
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/1995parham/gosimac/release?label=release&logo=github&style=flat-square)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/1995parham/gosimac/lint?label=lint&logo=github&style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/1995parham/gosimac/lint.yaml?label=lint&logo=github&style=flat-square&branch=main)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/1995parham/gosimac?logo=github&style=flat-square)
 ![GitHub Release Date](https://img.shields.io/github/release-date/1995parham/gosimac?logo=github&style=flat-square)
 
