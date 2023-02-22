@@ -24,7 +24,7 @@ const (
 func DefaultPath() string {
 	p := path.Join(xdg.UserDirs.Pictures, "GoSiMac")
 	if _, err := os.Stat(p); err != nil {
-		if err := os.Mkdir(p, DirectoryPermission); err != nil {
+		if err := os.MkdirAll(p, DirectoryPermission); err != nil {
 			log.Fatalf("os.Mkdir: %v", err)
 		}
 	}
