@@ -22,9 +22,14 @@ const (
 
 // DefaultPath is a default path for storing the wallpapers.
 func DefaultPath() string {
+
 	p := path.Join(xdg.UserDirs.Pictures, "GoSiMac")
+	if _, err := os.Stat("/proc/sys/fs/binfmt_misc/WSLInterop"); err == nil { //running on wsl (windows subsystem for linux)
+		log.Println("Program is running in a WSL environment")
+		p = path.Join(xdg.Home, "Pictures", "GoSiMac")
+	}
 	if _, err := os.Stat(p); err != nil {
-		if err := os.Mkdir(p, DirectoryPermission); err != nil {
+		if err := os.MkdirAll(p, DirectoryPermission); err != nil {
 			log.Fatalf("os.Mkdir: %v", err)
 		}
 	}
