@@ -22,7 +22,6 @@ const (
 
 // DefaultPath is a default path for storing the wallpapers.
 func DefaultPath() string {
-
 	p := path.Join(xdg.UserDirs.Pictures, "GoSiMac")
 	if _, err := os.Stat(p); err != nil {
 		if err := os.MkdirAll(p, DirectoryPermission); err != nil {
