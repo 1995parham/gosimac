@@ -6,6 +6,7 @@ linters:
     - varnamelen
     # why even we have this?
     - nolintlint
+    - depguard
     # deprecated linters
     - maligned
     - scopelint
