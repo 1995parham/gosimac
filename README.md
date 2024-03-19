@@ -5,6 +5,7 @@
   <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/1995parham/gosimac/lint.yaml?style=for-the-badge&logo=github">
   <img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/1995parham/gosimac?style=for-the-badge&logo=github">
   <img alt="AUR Version" src="https://img.shields.io/aur/version/gosimac?style=for-the-badge&logo=archlinux">
+  <img alt="Homebrew Version" src="https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/1995parham/homebrew-tap/main/gosimac.json&query=$.versions.stable&label=homebrew&logo=macos&style=for-the-badge">
 </p>
 
 ## Introduction
