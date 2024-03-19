@@ -23,3 +23,10 @@ archives:
     format: binary
   - id: default
     format: tar.gz
+
+brews:
+  - name: gosimac
+    tap:
+      owner: 1995parham
+      name: homebrew-tap
+    description: "Fetch the wallpaper from Bings, Unsplash ..."
