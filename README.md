@@ -1,10 +1,11 @@
-# Go Si Mac
+<h1 align="center"> Go Si Mac </h1>
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/1995parham/gosimac/lint.yaml?label=lint&logo=github&style=flat-square&branch=main)
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/1995parham/gosimac?logo=github&style=flat-square)
-![GitHub Release Date](https://img.shields.io/github/release-date/1995parham/gosimac?logo=github&style=flat-square)
-
-[![AUR package](https://repology.org/badge/version-for-repo/aur/gosimac.svg?style=flat-square)](https://repology.org/project/gosimac/versions)
+<p align="center">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/1995parham/gosimac?style=for-the-badge&logo=github">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/1995parham/gosimac/lint.yaml?style=for-the-badge&logo=github">
+  <img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/1995parham/gosimac?style=for-the-badge&logo=github">
+  <img alt="AUR Version" src="https://img.shields.io/aur/version/gosimac?style=for-the-badge&logo=archlinux">
+</p>
 
 ## Introduction
 
