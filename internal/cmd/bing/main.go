@@ -24,7 +24,7 @@ func Register(root *cobra.Command, path string) {
 		Aliases: []string{"b"},
 		Short:   "fetches images from https://bing.com",
 
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			n, err := cmd.Flags().GetInt(flagCount)
 			if err != nil {
 				return fmt.Errorf("count flag parse failed: %w", err)

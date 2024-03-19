@@ -70,7 +70,7 @@ func (b *Bing) Fetch() error {
 	for _, image := range r.Images {
 		pterm.Info.Printf("Getting %s\n", image.StartDate)
 
-		resp, err := resty.New().R().SetDoNotParseResponse(true).Get(fmt.Sprintf("http://www.bing.com/%s", image.URL))
+		resp, err := resty.New().R().SetDoNotParseResponse(true).Get("http://www.bing.com/" + image.URL)
 		if err != nil {
 			return fmt.Errorf("network failure: %w", err)
 		}

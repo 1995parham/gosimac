@@ -47,7 +47,7 @@ func New(count int, query string, orientation string, token string, path string,
 		Client: resty.New().
 			SetBaseURL("https://api.unsplash.com").
 			SetHeader("Accept-Version", "v1").
-			SetHeader("Authorization", fmt.Sprintf("Client-ID %s", token)),
+			SetHeader("Authorization", "Client-ID "+token),
 	}
 }
 
