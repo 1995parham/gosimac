@@ -3,7 +3,7 @@ go 1.22
 module github.com/1995parham/gosimac
 
 require (
-	github.com/adrg/xdg v0.5.1
+	github.com/adrg/xdg v0.5.3
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/go-resty/resty/v2 v2.15.3
 	github.com/pterm/pterm v0.12.79
