@@ -6,7 +6,7 @@ require (
 	github.com/adrg/xdg v0.5.3
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/go-resty/resty/v2 v2.16.2
-	github.com/pterm/pterm v0.12.79
+	github.com/pterm/pterm v0.12.80
 	github.com/spf13/cobra v1.8.1
 )
 
