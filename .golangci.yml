@@ -1,15 +1,12 @@
 ---
+version: "2"
 linters:
-  enable-all: true
+  default: all
   disable:
     # it should improve to support more known patterns
     - varnamelen
     # why even we have this?
     - nolintlint
     - depguard
-    # deprecated linters
-    - maligned
-    - scopelint
-    - golint
-    - interfacer
-    - exhaustivestruct
+    - revive
+    - gosec
