@@ -51,29 +51,6 @@ func New(count int, query string, orientation string, token string, path string,
 	}
 }
 
-// gather images urls from unplash based on given critarias.
-func (u *Unsplash) gather() ([]Image, error) {
-	var images []Image
-
-	resp, err := u.Client.R().
-		SetResult(&images).
-		SetQueryParam("count", strconv.Itoa(u.N)).
-		SetQueryParam("orientation", u.Orientation).
-		SetQueryParam("query", u.Query).
-		Get("/photos/random")
-	if err != nil {
-		return nil, fmt.Errorf("network failure: %w", err)
-	}
-
-	if resp.IsError() {
-		pterm.Error.Printf("unplash response code is %d: %s", resp.StatusCode(), resp.String())
-
-		return nil, ErrRequestFailed
-	}
-
-	return images, nil
-}
-
 // Fetch images from unsplash based on given critarias.
 // nolint: cyclop
 func (u *Unsplash) Fetch() error {
@@ -155,4 +132,27 @@ func (u *Unsplash) Store(name string, content io.ReadCloser) {
 	if err := content.Close(); err != nil {
 		pterm.Error.Printf("(*io.ReadCloser).Close: %v", err)
 	}
+}
+
+// gather images urls from unplash based on given critarias.
+func (u *Unsplash) gather() ([]Image, error) {
+	var images []Image
+
+	resp, err := u.Client.R().
+		SetResult(&images).
+		SetQueryParam("count", strconv.Itoa(u.N)).
+		SetQueryParam("orientation", u.Orientation).
+		SetQueryParam("query", u.Query).
+		Get("/photos/random")
+	if err != nil {
+		return nil, fmt.Errorf("network failure: %w", err)
+	}
+
+	if resp.IsError() {
+		pterm.Error.Printf("unplash response code is %d: %s", resp.StatusCode(), resp.String())
+
+		return nil, ErrRequestFailed
+	}
+
+	return images, nil
 }
