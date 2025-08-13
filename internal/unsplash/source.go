@@ -8,8 +8,8 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/go-resty/resty/v2"
 	"github.com/pterm/pterm"
+	"resty.dev/v3"
 )
 
 // ErrRequestFailed indicates a general error in service request.
@@ -95,7 +95,7 @@ func (u *Unsplash) Fetch() error {
 
 		pterm.Success.Printf("%s was gotten\n", image.ID)
 
-		go u.Store(image.ID, resp.RawBody())
+		go u.Store(image.ID, resp.Body)
 	}
 
 	return nil

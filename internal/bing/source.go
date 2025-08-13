@@ -9,8 +9,8 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/go-resty/resty/v2"
 	"github.com/pterm/pterm"
+	"resty.dev/v3"
 )
 
 // ErrRequestFailed indicates a general error in service request.
@@ -58,7 +58,7 @@ func (b *Bing) Fetch() error {
 
 		pterm.Success.Printf("%s was gotten\n", image.StartDate)
 
-		go b.Store(image.StartDate, resp.RawBody())
+		go b.Store(image.StartDate, resp.Body)
 	}
 
 	return nil

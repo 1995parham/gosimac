@@ -10,3 +10,4 @@ linters:
     - depguard
     - revive
     - gosec
+    - noinlineerr
