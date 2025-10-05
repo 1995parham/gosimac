@@ -29,12 +29,14 @@ func Register(root *cobra.Command, path string) {
 			if err != nil {
 				return fmt.Errorf("count flag parse failed: %w", err)
 			}
+
 			pterm.Info.Printf("count: %d\n", n)
 
 			i, err := cmd.Flags().GetInt(flagIndex)
 			if err != nil {
 				return fmt.Errorf("index flag parse failed: %w", err)
 			}
+
 			pterm.Info.Printf("index: %d\n", i)
 
 			b := bing.New(n, i, path)

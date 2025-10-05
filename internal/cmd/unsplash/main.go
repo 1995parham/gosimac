@@ -35,30 +35,35 @@ func Register(root *cobra.Command, path string) {
 			if err != nil {
 				return fmt.Errorf("count flag parse failed: %w", err)
 			}
+
 			pterm.Info.Printf("count: %d\n", n)
 
 			q, err := cmd.Flags().GetString(flagQuery)
 			if err != nil {
 				return fmt.Errorf("query flag parse failed: %w", err)
 			}
+
 			pterm.Info.Printf("query: %s\n", q)
 
 			o, err := cmd.Flags().GetString(flagOrientation)
 			if err != nil {
 				return fmt.Errorf("orientation flag parse failed: %w", err)
 			}
+
 			pterm.Info.Printf("orientation: %s\n", o)
 
 			t, err := cmd.Flags().GetString(flagToken)
 			if err != nil {
 				return fmt.Errorf("token flag parse failed: %w", err)
 			}
+
 			pterm.Info.Printf("token: %s\n", t)
 
 			s, err := cmd.Flags().GetString(flagSize)
 			if err != nil {
 				return fmt.Errorf("size flag parse failed: %w", err)
 			}
+
 			pterm.Info.Printf("size: %s\n", s)
 
 			u := unsplash.New(n, q, o, t, path, s)
