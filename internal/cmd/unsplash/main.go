@@ -23,6 +23,7 @@ const (
 )
 
 // Register registers unsplash command.
+// nolint: funlen
 func Register(root *cobra.Command, path string) {
 	// nolint: exhaustruct
 	cmd := &cobra.Command{
