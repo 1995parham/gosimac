@@ -13,7 +13,7 @@ func main() {
 		putils.LettersFromStringWithStyle("Si", pterm.NewStyle(pterm.FgLightMagenta)),
 		putils.LettersFromStringWithStyle("Mac", pterm.NewStyle(pterm.FgLightRed)),
 	).Render(); err != nil {
-		_ = err
+		pterm.Error.Printf("failed to render banner: %v\n", err)
 	}
 
 	pterm.Description.Printf("gosimac %s\n", versioninfo.Short())

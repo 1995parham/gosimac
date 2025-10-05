@@ -11,7 +11,7 @@ import (
 const (
 	flagQuery       = "query"
 	flagOrientation = "orientation"
-	flagCount       = "numer"
+	flagCount       = "number"
 	flagToken       = "token"
 	flagSize        = "size"
 

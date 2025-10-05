@@ -10,7 +10,7 @@ import (
 
 const (
 	flagIndex = "index"
-	flagCount = "numer"
+	flagCount = "number"
 
 	// DefaultCount is a default number of fetching images from sources.
 	defaultCount = 10

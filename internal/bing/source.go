@@ -5,10 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
-	"path"
 	"strconv"
+	"sync"
+	"time"
 
+	"github.com/1995parham/gosimac/internal/store"
 	"github.com/pterm/pterm"
 	"resty.dev/v3"
 )
@@ -31,7 +32,9 @@ func New(count int, index int, path string) *Bing {
 		Path:   path,
 		Index:  index,
 		Prefix: "bing",
-		Client: resty.New().SetBaseURL("https://www.bing.com"),
+		Client: resty.New().
+			SetBaseURL("https://www.bing.com").
+			SetTimeout(30 * time.Second),
 	}
 }
 
@@ -39,13 +42,15 @@ func New(count int, index int, path string) *Bing {
 func (b *Bing) Fetch() error {
 	r, err := b.gather()
 	if err != nil {
-		return fmt.Errorf("gatering information from bing failed %w", err)
+		return fmt.Errorf("gathering information from bing failed %w", err)
 	}
+
+	var wg sync.WaitGroup
 
 	for _, image := range r.Images {
 		pterm.Info.Printf("Getting %s\n", image.StartDate)
 
-		resp, err := resty.New().R().SetDoNotParseResponse(true).Get("http://www.bing.com/" + image.URL)
+		resp, err := b.Client.R().SetDoNotParseResponse(true).Get("http://www.bing.com/" + image.URL)
 		if err != nil {
 			return fmt.Errorf("network failure: %w", err)
 		}
@@ -58,43 +63,18 @@ func (b *Bing) Fetch() error {
 
 		pterm.Success.Printf("%s was gotten\n", image.StartDate)
 
-		go b.Store(image.StartDate, resp.Body)
+		wg.Add(1)
+
+		go func(name string, content io.ReadCloser) {
+			defer wg.Done()
+
+			store.Save(b.Path, b.Prefix, name, content)
+		}(image.StartDate, resp.Body)
 	}
+
+	wg.Wait()
 
 	return nil
-}
-
-func (b *Bing) Store(name string, content io.ReadCloser) {
-	path := path.Join(
-		b.Path,
-		fmt.Sprintf("%s-%s.jpg", b.Prefix, name),
-	)
-
-	if _, err := os.Stat(path); err == nil {
-		pterm.Warning.Printf("%s is already exists\n", path)
-
-		return
-	}
-
-	file, err := os.Create(path)
-	if err != nil {
-		pterm.Error.Printf("os.Create: %v\n", err)
-
-		return
-	}
-
-	bytes, err := io.Copy(file, content)
-	if err != nil {
-		pterm.Error.Printf("io.Copy (%d bytes): %v\n", bytes, err)
-	}
-
-	if err := file.Close(); err != nil {
-		pterm.Error.Printf("(*os.File).Close: %v", err)
-	}
-
-	if err := content.Close(); err != nil {
-		pterm.Error.Printf("(*io.ReadCloser).Close: %v", err)
-	}
 }
 
 // Init initiates source and return number of available images.

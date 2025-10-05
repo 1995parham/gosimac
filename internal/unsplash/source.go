@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
-	"path"
 	"strconv"
+	"sync"
+	"time"
 
+	"github.com/1995parham/gosimac/internal/store"
 	"github.com/pterm/pterm"
 	"resty.dev/v3"
 )
@@ -47,7 +48,8 @@ func New(count int, query string, orientation string, token string, path string,
 		Client: resty.New().
 			SetBaseURL("https://api.unsplash.com").
 			SetHeader("Accept-Version", "v1").
-			SetHeader("Authorization", "Client-ID "+token),
+			SetHeader("Authorization", "Client-ID "+token).
+			SetTimeout(30 * time.Second),
 	}
 }
 
@@ -56,10 +58,12 @@ func New(count int, query string, orientation string, token string, path string,
 func (u *Unsplash) Fetch() error {
 	images, err := u.gather()
 	if err != nil {
-		return fmt.Errorf("gatering information from unplash failed %w", err)
+		return fmt.Errorf("gathering information from unsplash failed %w", err)
 	}
 
-	// unplash rate limiter is sensivite we reduce the number of goroutines.
+	var wg sync.WaitGroup
+
+	// unsplash rate limiter is sensitive we reduce the number of goroutines.
 	for _, image := range images {
 		pterm.Info.Printf("Getting %s (%s)\n", image.ID, image.Description)
 
@@ -82,59 +86,34 @@ func (u *Unsplash) Fetch() error {
 			return ErrInvalidSize
 		}
 
-		resp, err := resty.New().R().SetDoNotParseResponse(true).Get(url)
+		resp, err := u.Client.R().SetDoNotParseResponse(true).Get(url)
 		if err != nil {
 			return fmt.Errorf("network failure: %w", err)
 		}
 
 		if resp.IsError() {
-			pterm.Error.Printf("unplash response code is %d: %s", resp.StatusCode(), resp.String())
+			pterm.Error.Printf("unsplash response code is %d: %s", resp.StatusCode(), resp.String())
 
 			return ErrRequestFailed
 		}
 
 		pterm.Success.Printf("%s was gotten\n", image.ID)
 
-		go u.Store(image.ID, resp.Body)
+		wg.Add(1)
+
+		go func(name string, content io.ReadCloser) {
+			defer wg.Done()
+
+			store.Save(u.Path, u.Prefix, name, content)
+		}(image.ID, resp.Body)
 	}
+
+	wg.Wait()
 
 	return nil
 }
 
-func (u *Unsplash) Store(name string, content io.ReadCloser) {
-	path := path.Join(
-		u.Path,
-		fmt.Sprintf("%s-%s.jpg", u.Prefix, name),
-	)
-
-	if _, err := os.Stat(path); err == nil {
-		pterm.Warning.Printf("%s is already exists\n", path)
-
-		return
-	}
-
-	file, err := os.Create(path)
-	if err != nil {
-		pterm.Error.Printf("os.Create: %v\n", err)
-
-		return
-	}
-
-	bytes, err := io.Copy(file, content)
-	if err != nil {
-		pterm.Error.Printf("io.Copy (%d bytes): %v\n", bytes, err)
-	}
-
-	if err := file.Close(); err != nil {
-		pterm.Error.Printf("(*os.File).Close: %v", err)
-	}
-
-	if err := content.Close(); err != nil {
-		pterm.Error.Printf("(*io.ReadCloser).Close: %v", err)
-	}
-}
-
-// gather images urls from unplash based on given critarias.
+// gather images urls from unsplash based on given critarias.
 func (u *Unsplash) gather() ([]Image, error) {
 	var images []Image
 
@@ -149,7 +128,7 @@ func (u *Unsplash) gather() ([]Image, error) {
 	}
 
 	if resp.IsError() {
-		pterm.Error.Printf("unplash response code is %d: %s", resp.StatusCode(), resp.String())
+		pterm.Error.Printf("unsplash response code is %d: %s", resp.StatusCode(), resp.String())
 
 		return nil, ErrRequestFailed
 	}
