@@ -14,6 +14,8 @@ import (
 	"resty.dev/v3"
 )
 
+const timeout = 30 * time.Second
+
 // ErrRequestFailed indicates a general error in service request.
 var ErrRequestFailed = errors.New("request failed")
 
@@ -34,7 +36,7 @@ func New(count int, index int, path string) *Bing {
 		Prefix: "bing",
 		Client: resty.New().
 			SetBaseURL("https://www.bing.com").
-			SetTimeout(30 * time.Second),
+			SetTimeout(timeout),
 	}
 }
 

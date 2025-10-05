@@ -13,6 +13,8 @@ import (
 	"resty.dev/v3"
 )
 
+const timeout = 30 * time.Second
+
 // ErrRequestFailed indicates a general error in service request.
 var ErrRequestFailed = errors.New("request failed")
 
@@ -49,7 +51,7 @@ func New(count int, query string, orientation string, token string, path string,
 			SetBaseURL("https://api.unsplash.com").
 			SetHeader("Accept-Version", "v1").
 			SetHeader("Authorization", "Client-ID "+token).
-			SetTimeout(30 * time.Second),
+			SetTimeout(timeout),
 	}
 }
 
