@@ -74,7 +74,7 @@ func (p *Pexels) Fetch() error {
 	var wg sync.WaitGroup
 
 	for _, photo := range photos {
-		pterm.Info.Printf("Getting %d (%s)\n", photo.ID, photo.Alt)
+		pterm.Info.Printf("Getting %d (%s - %s)\n", photo.ID, photo.Alt, photo.Photographer)
 
 		var url string
 
