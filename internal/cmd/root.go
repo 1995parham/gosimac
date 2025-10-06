@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/1995parham/gosimac/internal/cmd/bing"
+	"github.com/1995parham/gosimac/internal/cmd/pexels"
 	"github.com/1995parham/gosimac/internal/cmd/unsplash"
 	"github.com/adrg/xdg"
 	"github.com/pterm/pterm"
@@ -38,7 +39,7 @@ func Execute() {
 	// nolint: exhaustruct
 	root := &cobra.Command{
 		Use:   "GoSiMac",
-		Short: "Fetch the wallpaper from Bings, Unsplash...",
+		Short: "Fetch the wallpaper from Bing, Unsplash, Pexels...",
 	}
 
 	var path string
@@ -47,6 +48,7 @@ func Execute() {
 
 	unsplash.Register(root, path)
 	bing.Register(root, path)
+	pexels.Register(root, path)
 
 	if err := root.Execute(); err != nil {
 		pterm.Error.Println(err.Error())
