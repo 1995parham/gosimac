@@ -7,7 +7,7 @@ require (
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/pterm/pterm v0.12.82
 	github.com/spf13/cobra v1.10.1
-	resty.dev/v3 v3.0.0-beta.3
+	resty.dev/v3 v3.0.0-beta.4
 )
 
 require (
