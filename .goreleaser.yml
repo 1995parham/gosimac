@@ -37,14 +37,3 @@ archives:
       - goos: windows
         formats:
           - zip
-
-homebrew_casks:
-  - name: gosimac
-    ids:
-      - default
-    binaries:
-      - gosimac
-    repository:
-      owner: 1995parham
-      name: homebrew-tap
-    description: "Fetch the wallpaper from Bings, Unsplash ..."
