@@ -6,10 +6,16 @@ release:
     owner: 1995parham
     name: gosimac
 
-checksum: {}
-
 builds:
   - binary: gosimac
+    main: .
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X github.com/1995parham/gosimac/internal/cmd.version={{.Version}}
+      - -X github.com/1995parham/gosimac/internal/cmd.commit={{.ShortCommit}}
+      - -X github.com/1995parham/gosimac/internal/cmd.date={{.Date}}
     goos:
       - linux
       - darwin
@@ -17,16 +23,20 @@ builds:
     goarch:
       - amd64
       - arm64
-    main: ./main.go
 
 archives:
   - id: binary
     format: binary
   - id: default
     format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
 
 brews:
   - name: gosimac
+    install: |
+      bin.install "gosimac"
     tap:
       owner: 1995parham
       name: homebrew-tap

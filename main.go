@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/1995parham/gosimac/internal/cmd"
-	"github.com/carlmjohnson/versioninfo"
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
 )
@@ -16,7 +15,7 @@ func main() {
 		pterm.Error.Printf("failed to render banner: %v\n", err)
 	}
 
-	pterm.Description.Printf("gosimac %s\n", versioninfo.Short())
+	pterm.Description.Printf("gosimac %s\n", cmd.Version())
 
 	cmd.Execute()
 }

@@ -38,14 +38,16 @@ func DefaultPath() string {
 func Execute() {
 	// nolint: exhaustruct
 	root := &cobra.Command{
-		Use:   "GoSiMac",
-		Short: "Fetch the wallpaper from Bing, Unsplash, Pexels...",
+		Use:     "GoSiMac",
+		Short:   "Fetch the wallpaper from Bing, Unsplash, Pexels...",
+		Version: Version(),
 	}
 
 	var path string
 
 	root.PersistentFlags().StringVarP(&path, "path", "p", DefaultPath(), "A path to where photos are stored")
 
+	registerVersion(root)
 	unsplash.Register(root, path)
 	bing.Register(root, path)
 	pexels.Register(root, path)
