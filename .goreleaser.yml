@@ -40,6 +40,8 @@ archives:
 
 homebrew_casks:
   - name: gosimac
+    ids:
+      - default
     binaries:
       - gosimac
     repository:
