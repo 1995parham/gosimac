@@ -2,6 +2,7 @@ package pexels
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/1995parham/gosimac/internal/pexels"
 	"github.com/pterm/pterm"
@@ -16,10 +17,20 @@ const (
 
 	// DefaultCount is a default number of fetching images from sources.
 	defaultCount = 10
+
+	// nolint: gosec
+	defaultAPIKey = "MyMeHXzRhKAPr4VovWihfhq0E28DOug0wqmZhPs7djy0ubRH52hZnwG0"
 )
 
+func apiKeyDefault() string {
+	if k := os.Getenv("GOSIMAC_PEXELS_API_KEY"); k != "" {
+		return k
+	}
+
+	return defaultAPIKey
+}
+
 // Register registers pexels command.
-// nolint: funlen
 func Register(root *cobra.Command, path string) {
 	// nolint: exhaustruct
 	cmd := &cobra.Command{
@@ -56,9 +67,9 @@ func Register(root *cobra.Command, path string) {
 
 			pterm.Info.Printf("size: %s\n", s)
 
-			p := pexels.New(n, q, o, path, s)
+			p := pexels.New(n, q, o, apiKeyDefault(), path, s)
 
-			if err := p.Fetch(); err != nil {
+			if err := p.Fetch(cmd.Context()); err != nil {
 				return fmt.Errorf("pexels fetch failed %w", err)
 			}
 

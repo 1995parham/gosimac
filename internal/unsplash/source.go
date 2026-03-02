@@ -1,14 +1,13 @@
 package unsplash
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"io"
 	"strconv"
-	"sync"
 	"time"
 
-	"github.com/1995parham/gosimac/internal/store"
+	"github.com/1995parham/gosimac/internal/source"
 	"github.com/pterm/pterm"
 	"resty.dev/v3"
 )
@@ -55,78 +54,60 @@ func New(count int, query string, orientation string, token string, path string,
 	}
 }
 
-// Fetch images from unsplash based on given critarias.
-// nolint: cyclop
-func (u *Unsplash) Fetch() error {
-	images, err := u.gather()
+// Fetch images from unsplash based on given criteria.
+func (u *Unsplash) Fetch(ctx context.Context) error {
+	apiImages, err := u.gather(ctx)
 	if err != nil {
-		return fmt.Errorf("gathering information from unsplash failed %w", err)
+		return fmt.Errorf("unsplash: %w: %w", source.ErrGather, err)
 	}
 
-	var wg sync.WaitGroup
+	images := make([]source.Image, 0, len(apiImages))
 
-	// unsplash rate limiter is sensitive we reduce the number of goroutines.
-	for _, image := range images {
-		pterm.Info.Printf("Getting %s (%s)\n", image.ID, image.Description)
-
-		var url string
-
-		switch u.Size {
-		case RawSize:
-			url = image.URLs.Raw
-		case FullSize:
-			url = image.URLs.Full
-		case RegularSize:
-			url = image.URLs.Regular
-		case SmallSize:
-			url = image.URLs.Small
-		case ThumbSize:
-			url = image.URLs.Thumb
-		}
-
-		if url == "" {
-			return ErrInvalidSize
-		}
-
-		resp, err := u.Client.R().SetDoNotParseResponse(true).Get(url)
+	for _, img := range apiImages {
+		url, err := u.imageURL(img)
 		if err != nil {
-			return fmt.Errorf("network failure: %w", err)
+			return err
 		}
 
-		if resp.IsError() {
-			pterm.Error.Printf("unsplash response code is %d: %s", resp.StatusCode(), resp.String())
-
-			return ErrRequestFailed
-		}
-
-		pterm.Success.Printf("%s was gotten\n", image.ID)
-
-		wg.Add(1)
-
-		go func(name string, content io.ReadCloser) {
-			defer wg.Done()
-
-			store.Save(u.Path, u.Prefix, name, content)
-		}(image.ID, resp.Body)
+		images = append(images, source.Image{
+			Name: img.ID,
+			URL:  url,
+		})
 	}
 
-	wg.Wait()
-
-	return nil
+	return source.Download(ctx, u.Client, u.Path, u.Prefix, images)
 }
 
-// gather images urls from unsplash based on given critarias.
-func (u *Unsplash) gather() ([]Image, error) {
+func (u *Unsplash) imageURL(img Image) (string, error) {
+	switch u.Size {
+	case RawSize:
+		return img.URLs.Raw, nil
+	case FullSize:
+		return img.URLs.Full, nil
+	case RegularSize:
+		return img.URLs.Regular, nil
+	case SmallSize:
+		return img.URLs.Small, nil
+	case ThumbSize:
+		return img.URLs.Thumb, nil
+	default:
+		return "", ErrInvalidSize
+	}
+}
+
+// gather fetches image metadata from unsplash.
+func (u *Unsplash) gather(ctx context.Context) ([]Image, error) {
 	var images []Image
 
 	resp, err := u.Client.R().
+		SetContext(ctx).
 		SetResult(&images).
 		SetQueryParam("count", strconv.Itoa(u.N)).
 		SetQueryParam("orientation", u.Orientation).
 		SetQueryParam("query", u.Query).
 		Get("/photos/random")
 	if err != nil {
-		return nil, fmt.Errorf("network failure: %w", err)
+		return nil, fmt.Errorf("%w: %w", source.ErrNetworkFailure, err)
 	}
 
 	if resp.IsError() {

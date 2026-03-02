@@ -41,7 +41,7 @@ func Register(root *cobra.Command, path string) {
 
 			b := bing.New(n, i, path)
 
-			if err := b.Fetch(); err != nil {
+			if err := b.Fetch(cmd.Context()); err != nil {
 				return fmt.Errorf("bing fetch failed %w", err)
 			}
 

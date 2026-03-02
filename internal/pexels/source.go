@@ -2,22 +2,18 @@
 package pexels
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"io"
 	"strconv"
-	"sync"
 	"time"
 
-	"github.com/1995parham/gosimac/internal/store"
+	"github.com/1995parham/gosimac/internal/source"
 	"github.com/pterm/pterm"
 	"resty.dev/v3"
 )
 
 const timeout = 30 * time.Second
-
-// nolint: gosec
-const apiKey = "MyMeHXzRhKAPr4VovWihfhq0E28DOug0wqmZhPs7djy0ubRH52hZnwG0"
 
 // ErrRequestFailed indicates a general error in service request.
 var ErrRequestFailed = errors.New("request failed")
@@ -47,7 +43,7 @@ type Pexels struct {
 	Client      *resty.Client
 }
 
-func New(count int, query string, orientation string, path string, size string) *Pexels {
+func New(count int, query string, orientation string, apiKey string, path string, size string) *Pexels {
 	return &Pexels{
 		N:           count,
 		Query:       query,
@@ -64,75 +60,58 @@ func New(count int, query string, orientation string, path string, size string) 
 }
 
 // Fetch images from pexels based on given criteria.
-// nolint: cyclop
-func (p *Pexels) Fetch() error {
-	photos, err := p.gather()
+func (p *Pexels) Fetch(ctx context.Context) error {
+	photos, err := p.gather(ctx)
 	if err != nil {
-		return fmt.Errorf("gathering information from pexels failed %w", err)
+		return fmt.Errorf("pexels: %w: %w", source.ErrGather, err)
 	}
 
-	var wg sync.WaitGroup
+	images := make([]source.Image, 0, len(photos))
 
 	for _, photo := range photos {
-		pterm.Info.Printf("Getting %d (%s - %s)\n", photo.ID, photo.Alt, photo.Photographer)
-
-		var url string
-
-		switch p.Size {
-		case OriginalSize:
-			url = photo.Src.Original
-		case Large2xSize:
-			url = photo.Src.Large2x
-		case LargeSize:
-			url = photo.Src.Large
-		case MediumSize:
-			url = photo.Src.Medium
-		case SmallSize:
-			url = photo.Src.Small
-		case PortraitSize:
-			url = photo.Src.Portrait
-		case LandscapeSize:
-			url = photo.Src.Landscape
-		case TinySize:
-			url = photo.Src.Tiny
-		}
-
-		if url == "" {
-			return ErrInvalidSize
-		}
-
-		resp, err := p.Client.R().SetDoNotParseResponse(true).Get(url)
+		url, err := p.photoURL(photo)
 		if err != nil {
-			return fmt.Errorf("network failure: %w", err)
+			return err
 		}
 
-		if resp.IsError() {
-			pterm.Error.Printf("pexels response code is %d: %s", resp.StatusCode(), resp.String())
-
-			return ErrRequestFailed
-		}
-
-		pterm.Success.Printf("%d was gotten\n", photo.ID)
-
-		wg.Add(1)
-
-		go func(name string, content io.ReadCloser) {
-			defer wg.Done()
-
-			store.Save(p.Path, p.Prefix, name, content)
-		}(strconv.Itoa(photo.ID), resp.Body)
+		images = append(images, source.Image{
+			Name: strconv.Itoa(photo.ID),
+			URL:  url,
+		})
 	}
 
-	wg.Wait()
-
-	return nil
+	return source.Download(ctx, p.Client, p.Path, p.Prefix, images)
 }
 
-// gather images urls from pexels based on given criteria.
-func (p *Pexels) gather() ([]Photo, error) {
+func (p *Pexels) photoURL(photo Photo) (string, error) {
+	switch p.Size {
+	case OriginalSize:
+		return photo.Src.Original, nil
+	case Large2xSize:
+		return photo.Src.Large2x, nil
+	case LargeSize:
+		return photo.Src.Large, nil
+	case MediumSize:
+		return photo.Src.Medium, nil
+	case SmallSize:
+		return photo.Src.Small, nil
+	case PortraitSize:
+		return photo.Src.Portrait, nil
+	case LandscapeSize:
+		return photo.Src.Landscape, nil
+	case TinySize:
+		return photo.Src.Tiny, nil
+	default:
+		return "", ErrInvalidSize
+	}
+}
+
+// gather fetches image metadata from pexels.
+func (p *Pexels) gather(ctx context.Context) ([]Photo, error) {
 	r := new(Response)
 
 	req := p.Client.R().
+		SetContext(ctx).
 		SetResult(r).
 		SetQueryParam("per_page", strconv.Itoa(p.N))
 
@@ -154,7 +133,7 @@ func (p *Pexels) gather() ([]Photo, error) {
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("network failure: %w", err)
+		return nil, fmt.Errorf("%w: %w", source.ErrNetworkFailure, err)
 	}
 
 	if resp.IsError() {

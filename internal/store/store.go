@@ -1,6 +1,7 @@
 package store
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -9,24 +10,37 @@ import (
 	"github.com/pterm/pterm"
 )
 
+var (
+	// ErrAlreadyExists indicates the file already exists.
+	ErrAlreadyExists = errors.New("file already exists")
+	// ErrFileCreate indicates failure to create the destination file.
+	ErrFileCreate = errors.New("file creation failed")
+	// ErrFileCopy indicates failure to copy content into the file.
+	ErrFileCopy = errors.New("file copy failed")
+)
+
 // Save stores image content to a file with the given prefix and name.
-func Save(basePath, prefix, name string, content io.ReadCloser) {
+func Save(basePath, prefix, name string, content io.ReadCloser) error {
+	defer func() {
+		if err := content.Close(); err != nil {
+			pterm.Error.Printf("(*io.ReadCloser).Close: %v", err)
+		}
+	}()
+
 	filePath := path.Join(
 		basePath,
 		fmt.Sprintf("%s-%s.jpg", prefix, name),
 	)
 
 	if _, err := os.Stat(filePath); err == nil {
-		pterm.Warning.Printf("%s is already exists\n", filePath)
+		pterm.Warning.Printf("%s already exists\n", filePath)
 
-		return
+		return ErrAlreadyExists
 	}
 
 	file, err := os.Create(filePath)
 	if err != nil {
-		pterm.Error.Printf("os.Create: %v\n", err)
-
-		return
+		return fmt.Errorf("%w: %w", ErrFileCreate, err)
 	}
 
 	defer func() {
@@ -35,14 +49,9 @@ func Save(basePath, prefix, name string, content io.ReadCloser) {
 		}
 	}()
 
-	defer func() {
-		if err := content.Close(); err != nil {
-			pterm.Error.Printf("(*io.ReadCloser).Close: %v", err)
-		}
-	}()
-
-	bytes, err := io.Copy(file, content)
-	if err != nil {
-		pterm.Error.Printf("io.Copy (%d bytes): %v\n", bytes, err)
+	if _, err := io.Copy(file, content); err != nil {
+		return fmt.Errorf("%w: %w", ErrFileCopy, err)
 	}
+
+	return nil
 }

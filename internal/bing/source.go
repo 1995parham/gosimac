@@ -2,14 +2,13 @@
 package bing
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"io"
 	"strconv"
-	"sync"
 	"time"
 
-	"github.com/1995parham/gosimac/internal/store"
+	"github.com/1995parham/gosimac/internal/source"
 	"github.com/pterm/pterm"
 	"resty.dev/v3"
 )
@@ -41,50 +40,30 @@ func New(count int, index int, path string) *Bing {
 }
 
 // Fetch images from bing daily wallpaper.
-func (b *Bing) Fetch() error {
-	r, err := b.gather()
+func (b *Bing) Fetch(ctx context.Context) error {
+	r, err := b.gather(ctx)
 	if err != nil {
-		return fmt.Errorf("gathering information from bing failed %w", err)
+		return fmt.Errorf("bing: %w: %w", source.ErrGather, err)
 	}
 
-	var wg sync.WaitGroup
-
-	for _, image := range r.Images {
-		pterm.Info.Printf("Getting %s\n", image.StartDate)
-
-		resp, err := b.Client.R().SetDoNotParseResponse(true).Get("http://www.bing.com/" + image.URL)
-		if err != nil {
-			return fmt.Errorf("network failure: %w", err)
-		}
-
-		if resp.IsError() {
-			pterm.Error.Printf("bing response code is %d: %s", resp.StatusCode(), resp.String())
-
-			return ErrRequestFailed
-		}
-
-		pterm.Success.Printf("%s was gotten\n", image.StartDate)
-
-		wg.Add(1)
-
-		go func(name string, content io.ReadCloser) {
-			defer wg.Done()
-
-			store.Save(b.Path, b.Prefix, name, content)
-		}(image.StartDate, resp.Body)
+	images := make([]source.Image, 0, len(r.Images))
+	for _, img := range r.Images {
+		images = append(images, source.Image{
+			Name: img.StartDate,
+			URL:  "https://www.bing.com" + img.URL,
+		})
 	}
 
-	wg.Wait()
-
-	return nil
+	return source.Download(ctx, b.Client, b.Path, b.Prefix, images)
 }
 
-// Init initiates source and return number of available images.
-func (b *Bing) gather() (*Response, error) {
+// gather fetches image metadata from bing.
+func (b *Bing) gather(ctx context.Context) (*Response, error) {
 	r := new(Response)
 
 	resp, err := b.Client.
 		R().
+		SetContext(ctx).
 		SetResult(r).
 		SetQueryParam("format", "js").
 		SetQueryParam("mkt", "en-US").
@@ -92,7 +71,7 @@ func (b *Bing) gather() (*Response, error) {
 		SetQueryParam("n", strconv.Itoa(b.N)).
 		Get("/HPImageArchive.aspx")
 	if err != nil {
-		return nil, fmt.Errorf("network failure: %w", err)
+		return nil, fmt.Errorf("%w: %w", source.ErrNetworkFailure, err)
 	}
 
 	if resp.IsError() {
