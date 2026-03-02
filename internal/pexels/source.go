@@ -80,7 +80,11 @@ func (p *Pexels) Fetch(ctx context.Context) error {
 		})
 	}
 
-	return source.Download(ctx, p.Client, p.Path, p.Prefix, images)
+	if err := source.Download(ctx, p.Client, p.Path, p.Prefix, images); err != nil {
+		return fmt.Errorf("pexels download failed: %w", err)
+	}
+
+	return nil
 }
 
 func (p *Pexels) photoURL(photo Photo) (string, error) {

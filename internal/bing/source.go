@@ -54,7 +54,11 @@ func (b *Bing) Fetch(ctx context.Context) error {
 		})
 	}
 
-	return source.Download(ctx, b.Client, b.Path, b.Prefix, images)
+	if err := source.Download(ctx, b.Client, b.Path, b.Prefix, images); err != nil {
+		return fmt.Errorf("bing download failed: %w", err)
+	}
+
+	return nil
 }
 
 // gather fetches image metadata from bing.

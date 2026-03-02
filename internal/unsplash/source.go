@@ -75,7 +75,11 @@ func (u *Unsplash) Fetch(ctx context.Context) error {
 		})
 	}
 
-	return source.Download(ctx, u.Client, u.Path, u.Prefix, images)
+	if err := source.Download(ctx, u.Client, u.Path, u.Prefix, images); err != nil {
+		return fmt.Errorf("unsplash download failed: %w", err)
+	}
+
+	return nil
 }
 
 func (u *Unsplash) imageURL(img Image) (string, error) {

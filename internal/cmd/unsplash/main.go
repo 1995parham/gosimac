@@ -31,6 +31,51 @@ func tokenDefault() string {
 	return defaultToken
 }
 
+func run(cmd *cobra.Command, path string) error {
+	n, err := cmd.Flags().GetInt(flagCount)
+	if err != nil {
+		return fmt.Errorf("count flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("count: %d\n", n)
+
+	q, err := cmd.Flags().GetString(flagQuery)
+	if err != nil {
+		return fmt.Errorf("query flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("query: %s\n", q)
+
+	o, err := cmd.Flags().GetString(flagOrientation)
+	if err != nil {
+		return fmt.Errorf("orientation flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("orientation: %s\n", o)
+
+	t, err := cmd.Flags().GetString(flagToken)
+	if err != nil {
+		return fmt.Errorf("token flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("token: %s\n", t)
+
+	s, err := cmd.Flags().GetString(flagSize)
+	if err != nil {
+		return fmt.Errorf("size flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("size: %s\n", s)
+
+	u := unsplash.New(n, q, o, t, path, s)
+
+	if err := u.Fetch(cmd.Context()); err != nil {
+		return fmt.Errorf("unsplash fetch failed %w", err)
+	}
+
+	return nil
+}
+
 // Register registers unsplash command.
 func Register(root *cobra.Command, path string) {
 	// nolint: exhaustruct
@@ -40,48 +85,7 @@ func Register(root *cobra.Command, path string) {
 		Short:   "fetches images from https://unsplash.org",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			n, err := cmd.Flags().GetInt(flagCount)
-			if err != nil {
-				return fmt.Errorf("count flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("count: %d\n", n)
-
-			q, err := cmd.Flags().GetString(flagQuery)
-			if err != nil {
-				return fmt.Errorf("query flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("query: %s\n", q)
-
-			o, err := cmd.Flags().GetString(flagOrientation)
-			if err != nil {
-				return fmt.Errorf("orientation flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("orientation: %s\n", o)
-
-			t, err := cmd.Flags().GetString(flagToken)
-			if err != nil {
-				return fmt.Errorf("token flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("token: %s\n", t)
-
-			s, err := cmd.Flags().GetString(flagSize)
-			if err != nil {
-				return fmt.Errorf("size flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("size: %s\n", s)
-
-			u := unsplash.New(n, q, o, t, path, s)
-
-			if err := u.Fetch(cmd.Context()); err != nil {
-				return fmt.Errorf("unsplash fetch failed %w", err)
-			}
-
-			return nil
+			return run(cmd, path)
 		},
 	}
 
