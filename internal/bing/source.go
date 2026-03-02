@@ -43,7 +43,7 @@ func New(count int, index int, path string) *Bing {
 func (b *Bing) Fetch(ctx context.Context) error {
 	r, err := b.gather(ctx)
 	if err != nil {
-		return fmt.Errorf("bing: %w: %w", source.ErrGather, err)
+		return fmt.Errorf("gathering information from bing failed %w", err)
 	}
 
 	images := make([]source.Image, 0, len(r.Images))
@@ -71,7 +71,7 @@ func (b *Bing) gather(ctx context.Context) (*Response, error) {
 		SetQueryParam("n", strconv.Itoa(b.N)).
 		Get("/HPImageArchive.aspx")
 	if err != nil {
-		return nil, fmt.Errorf("%w: %w", source.ErrNetworkFailure, err)
+		return nil, fmt.Errorf("network failure: %w", err)
 	}
 
 	if resp.IsError() {

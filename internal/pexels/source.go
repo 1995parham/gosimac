@@ -63,7 +63,7 @@ func New(count int, query string, orientation string, apiKey string, path string
 func (p *Pexels) Fetch(ctx context.Context) error {
 	photos, err := p.gather(ctx)
 	if err != nil {
-		return fmt.Errorf("pexels: %w: %w", source.ErrGather, err)
+		return fmt.Errorf("gathering information from pexels failed %w", err)
 	}
 
 	images := make([]source.Image, 0, len(photos))
@@ -133,7 +133,7 @@ func (p *Pexels) gather(ctx context.Context) ([]Photo, error) {
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("%w: %w", source.ErrNetworkFailure, err)
+		return nil, fmt.Errorf("network failure: %w", err)
 	}
 
 	if resp.IsError() {

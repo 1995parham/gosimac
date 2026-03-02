@@ -10,14 +10,8 @@ import (
 	"github.com/pterm/pterm"
 )
 
-var (
-	// ErrAlreadyExists indicates the file already exists.
-	ErrAlreadyExists = errors.New("file already exists")
-	// ErrFileCreate indicates failure to create the destination file.
-	ErrFileCreate = errors.New("file creation failed")
-	// ErrFileCopy indicates failure to copy content into the file.
-	ErrFileCopy = errors.New("file copy failed")
-)
+// ErrAlreadyExists indicates the file already exists.
+var ErrAlreadyExists = errors.New("file already exists")
 
 // Save stores image content to a file with the given prefix and name.
 func Save(basePath, prefix, name string, content io.ReadCloser) error {
@@ -40,7 +34,7 @@ func Save(basePath, prefix, name string, content io.ReadCloser) error {
 
 	file, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("%w: %w", ErrFileCreate, err)
+		return fmt.Errorf("os.Create: %w", err)
 	}
 
 	defer func() {
@@ -49,8 +43,9 @@ func Save(basePath, prefix, name string, content io.ReadCloser) error {
 		}
 	}()
 
-	if _, err := io.Copy(file, content); err != nil {
-		return fmt.Errorf("%w: %w", ErrFileCopy, err)
+	bytes, err := io.Copy(file, content)
+	if err != nil {
+		return fmt.Errorf("io.Copy (%d bytes): %w", bytes, err)
 	}
 
 	return nil

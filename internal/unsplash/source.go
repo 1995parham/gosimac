@@ -58,7 +58,7 @@ func New(count int, query string, orientation string, token string, path string,
 func (u *Unsplash) Fetch(ctx context.Context) error {
 	apiImages, err := u.gather(ctx)
 	if err != nil {
-		return fmt.Errorf("unsplash: %w: %w", source.ErrGather, err)
+		return fmt.Errorf("gathering information from unsplash failed %w", err)
 	}
 
 	images := make([]source.Image, 0, len(apiImages))
@@ -107,7 +107,7 @@ func (u *Unsplash) gather(ctx context.Context) ([]Image, error) {
 		SetQueryParam("query", u.Query).
 		Get("/photos/random")
 	if err != nil {
-		return nil, fmt.Errorf("%w: %w", source.ErrNetworkFailure, err)
+		return nil, fmt.Errorf("network failure: %w", err)
 	}
 
 	if resp.IsError() {

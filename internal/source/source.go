@@ -12,15 +12,6 @@ import (
 	"resty.dev/v3"
 )
 
-var (
-	// ErrNetworkFailure indicates a network-level failure during an HTTP request.
-	ErrNetworkFailure = errors.New("network failure")
-	// ErrGather indicates failure to gather image metadata from a provider.
-	ErrGather = errors.New("gather failed")
-	// ErrSaveImage indicates failure to save downloaded images to disk.
-	ErrSaveImage = errors.New("save image failed")
-)
-
 // DownloadFailedError indicates that downloading an image failed with a non-2xx status.
 type DownloadFailedError struct {
 	Name       string
@@ -52,7 +43,7 @@ func Download(ctx context.Context, client *resty.Client, path, prefix string, im
 
 		resp, err := client.R().SetContext(ctx).SetDoNotParseResponse(true).Get(img.URL)
 		if err != nil {
-			return fmt.Errorf("download %s: %w: %w", img.Name, ErrNetworkFailure, err)
+			return fmt.Errorf("download %s: %w", img.Name, err)
 		}
 
 		if resp.IsError() {
@@ -67,12 +58,12 @@ func Download(ctx context.Context, client *resty.Client, path, prefix string, im
 				return nil
 			}
 
-			return err
+			return fmt.Errorf("store save failed: %w", err)
 		})
 	}
 
 	if err := g.Wait(); err != nil {
-		return fmt.Errorf("%w: %w", ErrSaveImage, err)
+		return fmt.Errorf("saving images: %w", err)
 	}
 
 	return nil
