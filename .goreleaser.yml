@@ -1,4 +1,6 @@
 ---
+version: 2
+
 project_name: gosimac
 
 release:
@@ -26,18 +28,21 @@ builds:
 
 archives:
   - id: binary
-    format: binary
+    formats:
+      - binary
   - id: default
-    format: tar.gz
+    formats:
+      - tar.gz
     format_overrides:
       - goos: windows
-        format: zip
+        formats:
+          - zip
 
-brews:
+homebrew_casks:
   - name: gosimac
-    install: |
-      bin.install "gosimac"
-    tap:
+    binaries:
+      - gosimac
+    repository:
       owner: 1995parham
       name: homebrew-tap
     description: "Fetch the wallpaper from Bings, Unsplash ..."
