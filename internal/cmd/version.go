@@ -7,6 +7,7 @@ import (
 )
 
 // Build-time variables set via ldflags.
+//nolint:gochecknoglobals
 var (
 	version = "dev"
 	commit  = "none"
@@ -22,8 +23,8 @@ func registerVersion(root *cobra.Command) {
 	root.AddCommand(&cobra.Command{
 		Use:   "version",
 		Short: "Print version information",
-		Run: func(_ *cobra.Command, _ []string) {
-			fmt.Println(Version())
+		Run: func(cmd *cobra.Command, _ []string) {
+			cmd.Println(Version())
 		},
 	})
 }
