@@ -140,7 +140,7 @@ func (p *Pexels) gather(ctx context.Context) ([]Photo, error) {
 		return nil, fmt.Errorf("network failure: %w", err)
 	}
 
-	if resp.IsError() {
+	if resp.IsStatusFailure() {
 		pterm.Error.Printf("pexels response code is %d: %s", resp.StatusCode(), resp.String())
 
 		return nil, ErrRequestFailed

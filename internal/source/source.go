@@ -41,12 +41,12 @@ func Download(ctx context.Context, client *resty.Client, path, prefix string, im
 	for _, img := range images {
 		pterm.Info.Printf("Getting %s\n", img.Name)
 
-		resp, err := client.R().SetContext(ctx).SetDoNotParseResponse(true).Get(img.URL)
+		resp, err := client.R().SetContext(ctx).SetResponseDoNotParse(true).Get(img.URL)
 		if err != nil {
 			return fmt.Errorf("download %s: %w", img.Name, err)
 		}
 
-		if resp.IsError() {
+		if resp.IsStatusFailure() {
 			return &DownloadFailedError{Name: img.Name, StatusCode: resp.StatusCode()}
 		}
 

@@ -114,7 +114,7 @@ func (u *Unsplash) gather(ctx context.Context) ([]Image, error) {
 		return nil, fmt.Errorf("network failure: %w", err)
 	}
 
-	if resp.IsError() {
+	if resp.IsStatusFailure() {
 		pterm.Error.Printf("unsplash response code is %d: %s", resp.StatusCode(), resp.String())
 
 		return nil, ErrRequestFailed
