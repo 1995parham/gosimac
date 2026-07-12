@@ -57,6 +57,19 @@ gosimac u -q Tehran -n 10
 
 By default, _gosimac_ stores images in `$XDG_PICTURES_DIR/GoSiMac (e.g. $HOME/Pictures/GoSiMac)`.
 
+## Setting the wallpaper (macOS)
+
+Pass the `--set` flag to any command and _gosimac_ will pick one of the images it
+just downloaded (at random) and set it as your desktop wallpaper. This is currently
+supported on macOS (it drives `osascript` and applies the image to **every** desktop,
+so all connected monitors are covered); on other operating systems the flag is a
+no-op that reports it is unsupported.
+
+```bash
+gosimac bing --set          # download today's Bing wallpaper and apply it
+gosimac u -q Tehran -n 10 --set
+```
+
 ## Contribution
 
 For adding new source you only need to create a new sub-command in `cmd` package
