@@ -14,6 +14,8 @@ const (
 	flagOrientation = "orientation"
 	flagCount       = "number"
 	flagSize        = "size"
+	// flagSet mirrors the persistent root flag registered in the cmd package.
+	flagSet = "set"
 
 	// DefaultCount is a default number of fetching images from sources.
 	defaultCount = 10
@@ -30,6 +32,49 @@ func apiKeyDefault() string {
 	return defaultAPIKey
 }
 
+func run(cmd *cobra.Command, path string) error {
+	n, err := cmd.Flags().GetInt(flagCount)
+	if err != nil {
+		return fmt.Errorf("count flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("count: %d\n", n)
+
+	q, err := cmd.Flags().GetString(flagQuery)
+	if err != nil {
+		return fmt.Errorf("query flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("query: %s\n", q)
+
+	o, err := cmd.Flags().GetString(flagOrientation)
+	if err != nil {
+		return fmt.Errorf("orientation flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("orientation: %s\n", o)
+
+	s, err := cmd.Flags().GetString(flagSize)
+	if err != nil {
+		return fmt.Errorf("size flag parse failed: %w", err)
+	}
+
+	pterm.Info.Printf("size: %s\n", s)
+
+	set, err := cmd.Flags().GetBool(flagSet)
+	if err != nil {
+		return fmt.Errorf("set flag parse failed: %w", err)
+	}
+
+	p := pexels.New(n, q, o, apiKeyDefault(), path, s, set)
+
+	if err := p.Fetch(cmd.Context()); err != nil {
+		return fmt.Errorf("pexels fetch failed %w", err)
+	}
+
+	return nil
+}
+
 // Register registers pexels command.
 func Register(root *cobra.Command, path string) {
 	// nolint: exhaustruct
@@ -39,41 +84,7 @@ func Register(root *cobra.Command, path string) {
 		Short:   "fetches images from https://pexels.com",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			n, err := cmd.Flags().GetInt(flagCount)
-			if err != nil {
-				return fmt.Errorf("count flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("count: %d\n", n)
-
-			q, err := cmd.Flags().GetString(flagQuery)
-			if err != nil {
-				return fmt.Errorf("query flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("query: %s\n", q)
-
-			o, err := cmd.Flags().GetString(flagOrientation)
-			if err != nil {
-				return fmt.Errorf("orientation flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("orientation: %s\n", o)
-
-			s, err := cmd.Flags().GetString(flagSize)
-			if err != nil {
-				return fmt.Errorf("size flag parse failed: %w", err)
-			}
-
-			pterm.Info.Printf("size: %s\n", s)
-
-			p := pexels.New(n, q, o, apiKeyDefault(), path, s)
-
-			if err := p.Fetch(cmd.Context()); err != nil {
-				return fmt.Errorf("pexels fetch failed %w", err)
-			}
-
-			return nil
+			return run(cmd, path)
 		},
 	}
 

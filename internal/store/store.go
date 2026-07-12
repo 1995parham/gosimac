@@ -14,7 +14,9 @@ import (
 var ErrAlreadyExists = errors.New("file already exists")
 
 // Save stores image content to a file with the given prefix and name.
-func Save(basePath, prefix, name string, content io.ReadCloser) error {
+// It returns the path of the file on disk. When the file already exists it
+// returns that path together with ErrAlreadyExists.
+func Save(basePath, prefix, name string, content io.ReadCloser) (string, error) {
 	defer func() {
 		if err := content.Close(); err != nil {
 			pterm.Error.Printf("(*io.ReadCloser).Close: %v", err)
@@ -29,12 +31,12 @@ func Save(basePath, prefix, name string, content io.ReadCloser) error {
 	if _, err := os.Stat(filePath); err == nil {
 		pterm.Warning.Printf("%s already exists\n", filePath)
 
-		return ErrAlreadyExists
+		return filePath, ErrAlreadyExists
 	}
 
 	file, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("os.Create: %w", err)
+		return "", fmt.Errorf("os.Create: %w", err)
 	}
 
 	defer func() {
@@ -45,8 +47,8 @@ func Save(basePath, prefix, name string, content io.ReadCloser) error {
 
 	bytes, err := io.Copy(file, content)
 	if err != nil {
-		return fmt.Errorf("io.Copy (%d bytes): %w", bytes, err)
+		return "", fmt.Errorf("io.Copy (%d bytes): %w", bytes, err)
 	}
 
-	return nil
+	return filePath, nil
 }

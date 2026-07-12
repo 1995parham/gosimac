@@ -15,6 +15,8 @@ const (
 	flagCount       = "number"
 	flagToken       = "token"
 	flagSize        = "size"
+	// flagSet mirrors the persistent root flag registered in the cmd package.
+	flagSet = "set"
 
 	// DefaultCount is a default number of fetching images from sources.
 	defaultCount = 10
@@ -67,7 +69,12 @@ func run(cmd *cobra.Command, path string) error {
 
 	pterm.Info.Printf("size: %s\n", s)
 
-	u := unsplash.New(n, q, o, t, path, s)
+	set, err := cmd.Flags().GetBool(flagSet)
+	if err != nil {
+		return fmt.Errorf("set flag parse failed: %w", err)
+	}
+
+	u := unsplash.New(n, q, o, t, path, s, set)
 
 	if err := u.Fetch(cmd.Context()); err != nil {
 		return fmt.Errorf("unsplash fetch failed %w", err)

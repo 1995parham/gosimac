@@ -35,16 +35,18 @@ type Unsplash struct {
 	Path        string
 	Prefix      string
 	Size        string
+	Set         bool
 	Client      *resty.Client
 }
 
-func New(count int, query string, orientation string, token string, path string, size string) *Unsplash {
+func New(count int, query string, orientation string, token string, path string, size string, set bool) *Unsplash {
 	return &Unsplash{
 		N:           count,
 		Query:       query,
 		Orientation: orientation,
 		Path:        path,
 		Size:        size,
+		Set:         set,
 		Prefix:      "unsplash",
 		Client: resty.New().
 			SetBaseURL("https://api.unsplash.com").
@@ -75,7 +77,7 @@ func (u *Unsplash) Fetch(ctx context.Context) error {
 		})
 	}
 
-	if err := source.Download(ctx, u.Client, u.Path, u.Prefix, images); err != nil {
+	if err := source.Download(ctx, u.Client, u.Path, u.Prefix, images, u.Set); err != nil {
 		return fmt.Errorf("unsplash download failed: %w", err)
 	}
 

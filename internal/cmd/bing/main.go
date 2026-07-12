@@ -11,6 +11,8 @@ import (
 const (
 	flagIndex = "index"
 	flagCount = "number"
+	// flagSet mirrors the persistent root flag registered in the cmd package.
+	flagSet = "set"
 
 	// DefaultCount is a default number of fetching images from sources.
 	defaultCount = 10
@@ -39,7 +41,12 @@ func Register(root *cobra.Command, path string) {
 
 			pterm.Info.Printf("index: %d\n", i)
 
-			b := bing.New(n, i, path)
+			set, err := cmd.Flags().GetBool(flagSet)
+			if err != nil {
+				return fmt.Errorf("set flag parse failed: %w", err)
+			}
+
+			b := bing.New(n, i, path, set)
 
 			if err := b.Fetch(cmd.Context()); err != nil {
 				return fmt.Errorf("bing fetch failed %w", err)

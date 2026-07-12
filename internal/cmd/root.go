@@ -21,6 +21,10 @@ const (
 	DirectoryPermission os.FileMode = 0755
 )
 
+// FlagSet is the name of the persistent flag that, when enabled, applies one of
+// the freshly downloaded images as the desktop wallpaper.
+const FlagSet = "set"
+
 // DefaultPath is a default path for storing the wallpapers.
 func DefaultPath() string {
 	p := path.Join(xdg.UserDirs.Pictures, "GoSiMac")
@@ -46,6 +50,7 @@ func Execute() {
 	var path string
 
 	root.PersistentFlags().StringVarP(&path, "path", "p", DefaultPath(), "A path to where photos are stored")
+	root.PersistentFlags().Bool(FlagSet, false, "Set one of the downloaded images as the desktop wallpaper (macOS)")
 
 	registerVersion(root)
 	unsplash.Register(root, path)

@@ -40,10 +40,11 @@ type Pexels struct {
 	Prefix      string
 	Size        string
 	APIKey      string
+	Set         bool
 	Client      *resty.Client
 }
 
-func New(count int, query string, orientation string, apiKey string, path string, size string) *Pexels {
+func New(count int, query string, orientation string, apiKey string, path string, size string, set bool) *Pexels {
 	return &Pexels{
 		N:           count,
 		Query:       query,
@@ -51,6 +52,7 @@ func New(count int, query string, orientation string, apiKey string, path string
 		Path:        path,
 		Size:        size,
 		APIKey:      apiKey,
+		Set:         set,
 		Prefix:      "pexels",
 		Client: resty.New().
 			SetBaseURL("https://api.pexels.com").
@@ -80,7 +82,7 @@ func (p *Pexels) Fetch(ctx context.Context) error {
 		})
 	}
 
-	if err := source.Download(ctx, p.Client, p.Path, p.Prefix, images); err != nil {
+	if err := source.Download(ctx, p.Client, p.Path, p.Prefix, images, p.Set); err != nil {
 		return fmt.Errorf("pexels download failed: %w", err)
 	}
 

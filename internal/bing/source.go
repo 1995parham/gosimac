@@ -24,15 +24,17 @@ type Bing struct {
 	Index  int
 	Path   string
 	Prefix string
+	Set    bool
 	Client *resty.Client
 }
 
-func New(count int, index int, path string) *Bing {
+func New(count int, index int, path string, set bool) *Bing {
 	return &Bing{
 		N:      count,
 		Path:   path,
 		Index:  index,
 		Prefix: "bing",
+		Set:    set,
 		Client: resty.New().
 			SetBaseURL("https://www.bing.com").
 			SetTimeout(timeout),
@@ -54,7 +56,7 @@ func (b *Bing) Fetch(ctx context.Context) error {
 		})
 	}
 
-	if err := source.Download(ctx, b.Client, b.Path, b.Prefix, images); err != nil {
+	if err := source.Download(ctx, b.Client, b.Path, b.Prefix, images, b.Set); err != nil {
 		return fmt.Errorf("bing download failed: %w", err)
 	}
 
