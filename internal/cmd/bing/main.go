@@ -19,7 +19,7 @@ const (
 )
 
 // Register registers bing command.
-func Register(root *cobra.Command, path string) {
+func Register(root *cobra.Command, path *string) {
 	// nolint: exhaustruct
 	cmd := &cobra.Command{
 		Use:     "bing",
@@ -46,7 +46,7 @@ func Register(root *cobra.Command, path string) {
 				return fmt.Errorf("set flag parse failed: %w", err)
 			}
 
-			b := bing.New(n, i, path, set)
+			b := bing.New(n, i, *path, set)
 
 			if err := b.Fetch(cmd.Context()); err != nil {
 				return fmt.Errorf("bing fetch failed %w", err)

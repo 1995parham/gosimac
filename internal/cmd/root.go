@@ -52,10 +52,12 @@ func Execute() {
 	root.PersistentFlags().StringVarP(&path, "path", "p", DefaultPath(), "A path to where photos are stored")
 	root.PersistentFlags().Bool(FlagSet, false, "Set one of the downloaded images as the desktop wallpaper (macOS)")
 
+	// Subcommands take a pointer because flags are not parsed until Execute
+	// runs; passing the value here would pin them to the default.
 	registerVersion(root)
-	unsplash.Register(root, path)
-	bing.Register(root, path)
-	pexels.Register(root, path)
+	unsplash.Register(root, &path)
+	bing.Register(root, &path)
+	pexels.Register(root, &path)
 
 	if err := root.Execute(); err != nil {
 		pterm.Error.Println(err.Error())

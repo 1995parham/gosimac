@@ -76,7 +76,7 @@ func run(cmd *cobra.Command, path string) error {
 }
 
 // Register registers pexels command.
-func Register(root *cobra.Command, path string) {
+func Register(root *cobra.Command, path *string) {
 	// nolint: exhaustruct
 	cmd := &cobra.Command{
 		Use:     "pexels",
@@ -84,7 +84,7 @@ func Register(root *cobra.Command, path string) {
 		Short:   "fetches images from https://pexels.com",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return run(cmd, path)
+			return run(cmd, *path)
 		},
 	}
 

@@ -60,10 +60,16 @@ By default, _gosimac_ stores images in `$XDG_PICTURES_DIR/GoSiMac (e.g. $HOME/Pi
 ## Setting the wallpaper (macOS)
 
 Pass the `--set` flag to any command and _gosimac_ will pick one of the images it
-just downloaded (at random) and set it as your desktop wallpaper. This is currently
-supported on macOS (it drives `osascript` and applies the image to **every** desktop,
-so all connected monitors are covered); on other operating systems the flag is a
-no-op that reports it is unsupported.
+just downloaded (at random) and set it as your desktop wallpaper. If the run brought
+nothing new down, it falls back to the images already in your library. This is
+currently supported on macOS; on other operating systems the flag is a no-op that
+reports it is unsupported.
+
+macOS keeps a separate wallpaper setting for every space, and for every display
+within a space. _gosimac_ writes them all, so the image applies across all your
+spaces and monitors rather than only the one you happen to be looking at. On macOS
+Sonoma and later this means rewriting `~/Library/Application Support/com.apple.wallpaper`
+and restarting `WallpaperAgent`; on older releases it falls back to `osascript`.
 
 ```bash
 gosimac bing --set          # download today's Bing wallpaper and apply it

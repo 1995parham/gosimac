@@ -42,20 +42,35 @@ type Source interface {
 func Download(ctx context.Context, client *resty.Client, path, prefix string, images []Image, set bool) error {
 	group, groupCtx := errgroup.WithContext(ctx)
 
-	// saved is written by index so each goroutine touches a distinct slot,
-	// avoiding a mutex. Empty slots are skipped when picking a wallpaper.
+	// saved and fresh are written by index so each goroutine touches a distinct
+	// slot, avoiding a mutex. Empty slots are skipped when picking a wallpaper.
 	saved := make([]string, len(images))
+	fresh := make([]bool, len(images))
+
+	// fetchErr stops the loop without an early return, so the goroutines already
+	// in flight are still waited on rather than left writing into saved.
+	var fetchErr error
 
 	for i, img := range images {
 		pterm.Info.Printf("Getting %s\n", img.Name)
 
 		resp, err := client.R().SetContext(groupCtx).SetResponseDoNotParse(true).Get(img.URL)
 		if err != nil {
-			return fmt.Errorf("download %s: %w", img.Name, err)
+			fetchErr = fmt.Errorf("download %s: %w", img.Name, err)
+
+			break
 		}
 
 		if resp.IsStatusFailure() {
-			return &DownloadFailedError{Name: img.Name, StatusCode: resp.StatusCode()}
+			// Nothing downstream will read this body, so close it here or the
+			// connection is held until the process exits.
+			if err := resp.Body.Close(); err != nil {
+				pterm.Error.Printf("(*resty.Response).Body.Close: %v\n", err)
+			}
+
+			fetchErr = &DownloadFailedError{Name: img.Name, StatusCode: resp.StatusCode()}
+
+			break
 		}
 
 		pterm.Success.Printf("%s downloaded\n", img.Name)
@@ -67,6 +82,7 @@ func Download(ctx context.Context, client *resty.Client, path, prefix string, im
 			}
 
 			saved[i] = filePath
+			fresh[i] = err == nil
 
 			return nil
 		})
@@ -76,30 +92,49 @@ func Download(ctx context.Context, client *resty.Client, path, prefix string, im
 		return fmt.Errorf("saving images: %w", err)
 	}
 
+	if fetchErr != nil {
+		return fetchErr
+	}
+
 	if set {
-		return setWallpaper(ctx, saved)
+		return setWallpaper(ctx, saved, fresh)
 	}
 
 	return nil
 }
 
 // setWallpaper applies a random downloaded image as the desktop wallpaper.
-func setWallpaper(ctx context.Context, paths []string) error {
-	available := make([]string, 0, len(paths))
+// Images that were already on disk are only considered when this run brought
+// nothing new down, so a repeated run does not reshuffle back to an older image
+// while a fresh one is available.
+func setWallpaper(ctx context.Context, paths []string, fresh []bool) error {
+	candidates := make([]string, 0, len(paths))
 
-	for _, p := range paths {
-		if p != "" {
-			available = append(available, p)
+	for i, p := range paths {
+		if p != "" && fresh[i] {
+			candidates = append(candidates, p)
 		}
 	}
 
-	if len(available) == 0 {
+	if len(candidates) == 0 {
+		for _, p := range paths {
+			if p != "" {
+				candidates = append(candidates, p)
+			}
+		}
+
+		if len(candidates) > 0 {
+			pterm.Info.Println("no new images this run, picking from the ones already downloaded")
+		}
+	}
+
+	if len(candidates) == 0 {
 		pterm.Warning.Println("no images available to set as wallpaper")
 
 		return nil
 	}
 
-	choice := available[rand.IntN(len(available))]
+	choice := candidates[rand.IntN(len(candidates))]
 
 	pterm.Info.Printf("Setting wallpaper to %s\n", choice)
 
