@@ -135,7 +135,7 @@ func imageChoice(abs string) (map[string]any, error) {
 	var cfg imageConfiguration
 
 	cfg.Type = "imageFile"
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	cfg.URL.Relative = (&url.URL{Scheme: "file", Path: abs}).String()
 
 	// The store nests this as an opaque binary property list.

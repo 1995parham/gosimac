@@ -85,7 +85,7 @@ func run(cmd *cobra.Command, path string) error {
 
 // Register registers unsplash command.
 func Register(root *cobra.Command, path *string) {
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	cmd := &cobra.Command{
 		Use:     "unsplash",
 		Aliases: []string{"u"},

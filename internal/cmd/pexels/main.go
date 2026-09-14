@@ -77,7 +77,7 @@ func run(cmd *cobra.Command, path string) error {
 
 // Register registers pexels command.
 func Register(root *cobra.Command, path *string) {
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	cmd := &cobra.Command{
 		Use:     "pexels",
 		Aliases: []string{"p"},

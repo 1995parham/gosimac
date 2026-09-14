@@ -11,3 +11,8 @@ linters:
     - revive
     - gosec
     - noinlineerr
+    # deprecated aliases, `default: all` already enables their successors
+    # (exhaustruct_v5, gomodguard_v2, wsl_v5).
+    - exhaustruct
+    - gomodguard
+    - wsl

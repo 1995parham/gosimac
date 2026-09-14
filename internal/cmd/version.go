@@ -19,7 +19,7 @@ func Version() string {
 }
 
 func registerVersion(root *cobra.Command) {
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	root.AddCommand(&cobra.Command{
 		Use:   "version",
 		Short: "Print version information",

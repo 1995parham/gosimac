@@ -40,7 +40,7 @@ func DefaultPath() string {
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	root := &cobra.Command{
 		Use:     "GoSiMac",
 		Short:   "Fetch the wallpaper from Bing, Unsplash, Pexels...",
